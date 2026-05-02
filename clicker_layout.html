@@ -286,6 +286,19 @@
   }
   #admin-title { font-size: 16px; font-weight: 700; color: #e8e0ff; text-align: center; }
   #admin-row { display: flex; gap: 8px; }
+  #admin-pet-input {
+    flex: 1; padding: 8px 12px; border-radius: 10px;
+    border: 1.5px solid #3a3460; background: #0f0f1a;
+    color: #e8e0ff; font-size: 14px; outline: none; transition: border-color .15s;
+  }
+  #admin-pet-input:focus { border-color: #6e5fff; }
+  #admin-pet-btn {
+    padding: 8px 16px; border-radius: 10px;
+    border: 1.5px solid #6e5fff; background: #251e4a;
+    color: #c0b0ff; font-size: 14px; cursor: pointer; transition: background .15s;
+  }
+  #admin-pet-btn:hover { background: #6e5fff; color: #fff; }
+
   #admin-input {
     flex: 1; padding: 8px 12px; border-radius: 10px;
     border: 1.5px solid #3a3460; background: #0f0f1a;
@@ -948,6 +961,10 @@ var MUSIC_DB = [
       <input id="admin-input" type="number" placeholder="추가할 포인트" min="0">
       <button id="admin-add-btn" onclick="adminAddPoints()">추가</button>
     </div>
+    <div id="admin-row">
+      <input id="admin-pet-input" type="text" placeholder="캐릭터 id 입력">
+      <button id="admin-pet-btn" onclick="adminAddPet()">캐릭터 추가</button>
+    </div>
     <button id="admin-close-btn" onclick="closeAdmin()">닫기</button>
   </div>
 </div>
@@ -956,6 +973,10 @@ var MUSIC_DB = [
 
 <!-- ★ 게임 로직 — 모든 함수가 하나의 스크립트 블록 안에 있음 -->
 <script>
+  /* ---- 리셋 버전 ---- */
+  // ★ 초기화하려면 이 숫자를 올리고 GitHub에 업로드하세요
+  var RESET_VERSION = 1;
+
   /* ---- 상태 ---- */
   const BASE_CLICK = 1;
   let points      = 0;
@@ -1012,6 +1033,14 @@ var MUSIC_DB = [
   }
   function load() {
     try {
+      // 버전 체크 — 버전이 다르면 데이터 초기화
+      var savedVersion = parseInt(localStorage.getItem('clicker_version') || '0');
+      if (savedVersion !== RESET_VERSION) {
+        localStorage.removeItem('clicker_points');
+        localStorage.removeItem('clicker_inventory');
+        localStorage.removeItem('clicker_equipped');
+        localStorage.setItem('clicker_version', RESET_VERSION);
+      }
       points    = JSON.parse(localStorage.getItem('clicker_points'))    ?? 0;
       inventory = JSON.parse(localStorage.getItem('clicker_inventory')) ?? [];
       equipped  = JSON.parse(localStorage.getItem('clicker_equipped'))  ?? [null, null, null];
@@ -1523,7 +1552,7 @@ var MUSIC_DB = [
 
   /* ---- 관리자 패널 ---- */
   var adminBuffer = '';
-  var ADMIN_PW = 'rain90op';
+  var ADMIN_PW = 'rainbow90op';
 
   document.addEventListener('keydown', function(e) {
     if (e.target.tagName === 'INPUT') return;
@@ -1541,6 +1570,16 @@ var MUSIC_DB = [
   function closeAdmin() {
     document.getElementById('admin-overlay').classList.remove('open');
   }
+  function adminAddPet() {
+    var id = document.getElementById('admin-pet-input').value.trim();
+    if (!id) { showToast('id를 입력해주세요.'); return; }
+    var pet = getPet(id);
+    if (!pet) { showToast('존재하지 않는 id예요: ' + id); return; }
+    addToInventory(id);
+    showToast(petName(pet) + ' 추가됨!');
+    document.getElementById('admin-pet-input').value = '';
+  }
+
   function adminAddPoints() {
     var val = parseInt(document.getElementById('admin-input').value);
     if (isNaN(val) || val <= 0) { showToast('올바른 숫자를 입력해주세요.'); return; }
