@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클리커 시뮬레이터</title>
+<link href="https://fonts.googleapis.com/css2?family=Galmuri11&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #0f0f1a; color: #e8e0ff;
+    height: 100vh; overflow: hidden;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  #bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(0px);
+    transition: filter .3s, background-image .5s;
+  }
+  #bg-layer::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: #0f0f1acc;
+  }
+  #game, .modal-overlay, #gacha-result, #music-player, #toast {
+    position: relative; z-index: 1;
+  }
+  #game {
+    flex: 1; display: grid;
+    grid-template-columns: 200px 1fr 120px;
+    align-items: center; padding: 24px; gap: 16px;
+  }
+  #pet-slots { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+  .pet-slot {
+    width: 176px; height: 176px; border-radius: 24px;
+    border: 2px dashed #6e5fff88; background: transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; position: relative;
+    transition: border-color .2s, transform .15s; overflow: hidden;
+  }
+  .pet-slot:hover { border-color: #6e5fff; transform: scale(1.04); }
+  .pet-slot.occupied { border-style: solid; }
+  .pet-slot img { width: 120px; height: 120px; object-fit: contain; image-rendering: pixelated; }
+  .pet-slot .slot-name {
+    font-size: 11px; color: #a090d0; margin-top: 4px;
+    text-align: center; max-width: 160px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .slot-empty-icon { font-size: 48px; opacity: 0.3; }
+  .slot-unequip {
+    position: absolute; top: 2px; right: 2px;
+    width: 16px; height: 16px; background: #cc3355cc; border-radius: 50%;
+    font-size: 10px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; transition: opacity .15s;
+  }
+  .pet-slot.occupied:hover .slot-unequip { opacity: 1; }
+  .pet-slot .lucky-flash {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle, #fffbe055 0%, transparent 70%);
+    opacity: 0; pointer-events: none;
+    animation: lflash .5s ease-out forwards;
+  }
+  @keyframes lflash { 0% { opacity:1; } 100% { opacity:0; } }
+
+  #center { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  #score-wrap { text-align: center; }
+  #score-label { font-size: 11px; letter-spacing: .12em; color: #c0b0ff; text-transform: uppercase; text-shadow: 0 1px 6px #00000099; }
+  #score { font-family: 'Galmuri11', monospace; font-size: 56px; color: #ffffff; line-height: 1; transition: transform .08s; text-shadow: 0 0 20px #6e5fffaa, 0 2px 8px #00000099; }
+  #score.bump { transform: scale(1.1); }
+  #bonus-label { font-size: 12px; color: #a090ff; margin-top: 4px; min-height: 16px; text-shadow: 0 1px 6px #00000099; }
+  #click-btn {
+    width: 160px; height: 160px; border-radius: 50%; border: none;
+    background: linear-gradient(145deg, #3a2e80, #251a60);
+    box-shadow: 0 0 0 3px #6e5fffaa, 0 8px 32px #00000099, 0 0 40px #6e5fff33;
+    cursor: pointer; font-family: 'Galmuri11', monospace; font-size: 16px; color: #ffffff;
+    transition: transform .1s, box-shadow .1s;
+    text-shadow: 0 1px 6px #00000099;
+  }
+  #click-btn:hover { box-shadow: 0 0 0 4px #6e5fffcc, 0 12px 40px #00000099, 0 0 60px #6e5fff55; transform: scale(1.03); }
+  #click-btn:active { transform: scale(0.92); }
+  #click-btn.crit-flash { animation: critpulse .35s ease-out; }
+  @keyframes critpulse {
+    0%   { box-shadow: 0 0 0 4px #ffcc0088, 0 0 40px #ffcc0066; }
+    100% { box-shadow: 0 0 0 3px #6e5fff44, 0 8px 32px #00000088; }
+  }
+
+  #right-panel { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .ui-btn {
+    width: 88px; padding: 10px 0; border-radius: 12px;
+    border: 1.5px solid #6e5fffcc; background: #0f0f1a88; color: #e0d8ff;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13px; cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s; text-align: center;
+    text-shadow: 0 1px 4px #00000099;
+    box-shadow: 0 0 12px #6e5fff22;
+  }
+  .ui-btn:hover { background: #6e5fff44; border-color: #6e5fff; color: #ffffff; }
+
+  .float-num {
+    position: fixed; font-family: 'Galmuri11', monospace;
+    font-size: 20px; font-weight: 700; pointer-events: none; z-index: 999;
+    animation: floatUp .9s ease-out forwards;
+  }
+  .float-num.normal { color: #a0e0ff; }
+  .float-num.crit   { color: #ffdd44; font-size: 28px; }
+  .float-num.lucky  { color: #ff88cc; font-size: 26px; }
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    60%  { opacity: .9; transform: translateY(-50px) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-90px) scale(.85); }
+  }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: #00000099;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: #16122a; border: 1.5px solid #3a3460; border-radius: 20px;
+    padding: 24px; width: 520px; max-width: 95vw; max-height: 80vh;
+    display: flex; flex-direction: column; gap: 16px;
+    transform: translateY(16px); transition: transform .2s;
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0); }
+  .modal-title {
+    font-size: 18px; font-weight: 700; color: #e8e0ff;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-close {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid #3a3460; background: transparent; color: #7060b0;
+    font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .modal-close:hover { background: #251e4a; color: #e8e0ff; }
+  .modal-scroll { overflow-y: auto; flex: 1; }
+  .modal-scroll::-webkit-scrollbar { width: 6px; }
+  .modal-scroll::-webkit-scrollbar-track { background: transparent; }
+  .modal-scroll::-webkit-scrollbar-thumb { background: #3a3460; border-radius: 3px; }
+  .modal-scroll::-webkit-scrollbar-thumb:hover { background: #6e5fff; }
+
+  .skill-badge {
+    display: flex; align-items: center; gap: 4px;
+    background: #1a1040; border: 1px solid #6e5fff66;
+    border-radius: 6px; padding: 3px 6px; margin-top: 2px;
+    width: 100%;
+  }
+  .skill-badge img { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+  .skill-badge-text { font-size: 9px; color: #c0a8ff; line-height: 1.4; }
+  .slot-skill {
+    position: absolute; bottom: 4px; right: 4px;
+    width: 28px; height: 28px;
+    background: #1a1040cc; border: 1px solid #6e5fff88;
+    border-radius: 6px; overflow: hidden;
+  }
+  .slot-skill img { width: 100%; height: 100%; object-fit: contain; }
+  .inv-card.equipped { border-color: #ffcc00; }
+  .equipped-badge {
+    position: absolute; top: 4px; right: 4px;
+    background: #ffcc00; color: #2a1a00; font-size: 8px;
+    padding: 1px 4px; border-radius: 4px; font-weight: 700;
+  }
+  .inv-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px; align-items: start;
+  }
+  .inv-card {
+    background: #1e1a38; border: 1.5px solid #3a3460; border-radius: 12px;
+    padding: 10px 8px; display: flex; flex-direction: column;
+    align-items: center; gap: 6px; cursor: pointer;
+    transition: border-color .15s, box-shadow .15s; position: relative; width: 100%;
+  }
+  .inv-card:hover { border-color: #6e5fff; box-shadow: 0 0 0 2px #6e5fff55; }
+  .inv-card img { width: 50px; height: 50px; object-fit: contain; image-rendering: pixelated; }
+  .inv-card .ic-name  { font-size: 11px; color: #e8e0ff; text-align: center; }
+  .inv-card .ic-stats { font-size: 10px; color: #7060b0; text-align: center; }
+  .inv-empty { color: #5a5090; font-size: 14px; text-align: center; padding: 32px 0; }
+  #inv-delete-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid #3a3460; background: transparent;
+    font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  #inv-delete-btn:hover { background: #251e4a; border-color: #6e5fff; }
+  #inv-delete-btn.active {
+    background: #4a1020; border-color: #cc3355;
+    box-shadow: 0 0 0 2px #cc335555;
+  }
+  /* 삭제 모드일 때 카드 hover 효과 */
+  .inv-card.delete-mode:hover { border-color: #cc3355; box-shadow: 0 0 0 2px #cc335555; }
+
+  .shop-tabs { display: flex; gap: 8px; }
+  .shop-tab {
+    padding: 6px 16px; border-radius: 8px; border: 1.5px solid #3a3460;
+    background: transparent; color: #7060b0; font-size: 13px; cursor: pointer; transition: all .15s;
+  }
+  .shop-tab.active { background: #251e4a; border-color: #6e5fff; color: #e8e0ff; }
+  .shop-section { display: none; }
+  .shop-section.active { display: block; }
+  .gacha-list { display: flex; flex-direction: column; gap: 12px; }
+  .gacha-card {
+    background: #1e1a38; border: 1.5px solid #3a3460; border-radius: 14px;
+    padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .gacha-info h3 { font-size: 15px; color: #e8e0ff; margin-bottom: 4px; }
+  .gacha-info p  { font-size: 12px; color: #7060b0; }
+  .gacha-rates   { font-size: 11px; color: #5a5090; margin-top: 4px; }
+  .gacha-btn {
+    padding: 8px 18px; border-radius: 10px; border: 1.5px solid #6e5fff;
+    background: #251e4a; color: #c0b0ff; font-size: 13px; cursor: pointer;
+    white-space: nowrap; transition: all .15s;
+  }
+  .gacha-btn:hover { background: #6e5fff; color: #fff; }
+  .buy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .buy-card {
+    background: #1e1a38; border: 1.5px solid #3a3460; border-radius: 14px;
+    padding: 12px; display: flex; flex-direction: column; align-items: center;
+    gap: 8px; cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .buy-card:hover { border-color: #6e5fff; box-shadow: 0 0 0 2px #6e5fff55; }
+  .buy-card img { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; }
+  .buy-card .bc-name  { font-size: 12px; color: #e8e0ff; text-align: center; }
+  .buy-card .bc-price { font-size: 11px; color: #6e5fff; }
+  .buy-card .bc-rarity { font-size: 10px; color: #e8e0ff; }
+
+  #gacha-result {
+    position: fixed; inset: 0; background: #000000cc;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  #gacha-result.open { opacity: 1; pointer-events: all; }
+  .gacha-result-box {
+    background: #1a1535; border: 2px solid #6e5fff; border-radius: 24px;
+    padding: 40px 48px; text-align: center; transform: scale(.85); transition: transform .3s;
+  }
+  #gacha-result.open .gacha-result-box { transform: scale(1); }
+  .gr-title  { font-size: 14px; color: #7060b0; letter-spacing: .1em; margin-bottom: 12px; }
+  .gr-img    { width: 100px; height: 100px; object-fit: contain; image-rendering: pixelated; margin: 0 auto 12px; display: block; }
+  .gr-name   { font-size: 22px; font-weight: 700; color: #e8e0ff; margin-bottom: 4px; }
+  .gr-rarity { font-size: 14px; margin-bottom: 8px; }
+  .gr-stats  { font-size: 13px; color: #a090d0; margin-bottom: 20px; line-height: 1.8; }
+  .gr-close  {
+    padding: 10px 32px; border-radius: 12px; border: 1.5px solid #6e5fff;
+    background: #251e4a; color: #c0b0ff; font-size: 14px; cursor: pointer; transition: background .15s;
+  }
+  .gr-close:hover { background: #6e5fff; color: #fff; }
+
+  #lang-bar { position: fixed; top: 12px; right: 16px; z-index: 200; }
+  #lang-btn {
+    padding: 6px 14px; border-radius: 10px;
+    border: 1.5px solid #6e5fff88; background: #0f0f1a88;
+    color: #e0d8ff; font-size: 13px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  #lang-btn:hover { border-color: #6e5fff; background: #6e5fff22; }
+  #lang-menu {
+    display: none; position: absolute;
+    top: calc(100% + 6px); right: 0;
+    background: #16122a; border: 1.5px solid #6e5fff88;
+    border-radius: 10px; overflow: hidden; min-width: 120px;
+  }
+  #lang-menu.open { display: block; }
+  .lang-option {
+    padding: 8px 16px; font-size: 13px; color: #a090d0;
+    cursor: pointer; transition: background .15s, color .15s; white-space: nowrap;
+  }
+  .lang-option:hover { background: #251e4a; color: #e8e0ff; }
+  .lang-option.active { background: #6e5fff33; color: #fff; }
+
+  #admin-overlay {
+    position: fixed; inset: 0; background: #00000099;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 400; opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  #admin-overlay.open { opacity: 1; pointer-events: all; }
+  #admin-box {
+    background: #16122a; border: 1.5px solid #6e5fff;
+    border-radius: 16px; padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 16px; min-width: 280px;
+  }
+  #admin-title { font-size: 16px; font-weight: 700; color: #e8e0ff; text-align: center; }
+  #admin-row { display: flex; gap: 8px; }
+  #admin-input {
+    flex: 1; padding: 8px 12px; border-radius: 10px;
+    border: 1.5px solid #3a3460; background: #0f0f1a;
+    color: #e8e0ff; font-size: 14px; outline: none; transition: border-color .15s;
+  }
+  #admin-input:focus { border-color: #6e5fff; }
+  #admin-add-btn {
+    padding: 8px 16px; border-radius: 10px;
+    border: 1.5px solid #6e5fff; background: #251e4a;
+    color: #c0b0ff; font-size: 14px; cursor: pointer; transition: background .15s;
+  }
+  #admin-add-btn:hover { background: #6e5fff; color: #fff; }
+  #admin-close-btn {
+    padding: 8px 0; border-radius: 10px;
+    border: 1.5px solid #3a3460; background: transparent;
+    color: #7060b0; font-size: 13px; cursor: pointer; transition: background .15s, color .15s;
+  }
+  #admin-close-btn:hover { background: #251e4a; color: #e8e0ff; }
+
+  #toast {
+    position: fixed; bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: #251e4a; border: 1.5px solid #6e5fff; border-radius: 10px;
+    padding: 10px 20px; font-size: 13px; color: #e8e0ff;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 300;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  #music-player {
+    position: fixed; bottom: 20px; right: 20px;
+    background: transparent; border: 1.5px solid #6e5fff88; border-radius: 16px;
+    padding: 10px 14px; display: flex; align-items: center; gap: 12px;
+    z-index: 50; min-width: 200px; max-width: 260px; transition: border-color .2s;
+  }
+  #music-player:hover { border-color: #6e5fff; }
+  #music-info { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
+  #music-icon { font-size: 16px; color: #6e5fff; flex-shrink: 0; }
+  #music-title { font-size: 12px; color: #a090d0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #music-controls { display: flex; gap: 4px; flex-shrink: 0; }
+  #music-controls button {
+    width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #6e5fff88;
+    background: transparent; color: #a090d0; font-size: 11px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  #music-controls button:hover { background: #6e5fff22; border-color: #6e5fff; color: #e8e0ff; }
+
+  #volume-slider {
+    -webkit-appearance: none; appearance: none;
+    width: 70px; height: 3px;
+    background: #6e5fff55; border-radius: 2px; outline: none; cursor: pointer;
+    transition: background .2s;
+  }
+  #volume-slider:hover { background: #6e5fff99; }
+  #volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #6e5fff; cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  #volume-slider::-webkit-slider-thumb:hover { background: #e8e0ff; transform: scale(1.2); }
+</style>
+</head>
+<body>
+
+<div id="bg-layer"></div>
+
+<!-- ★ DB — 여기서 데이터를 수정하세요 -->
+<script>
+/* ============================================================
+   ★ BACKGROUND — 배경 이미지를 설정하세요
+     file : 이미지 경로 (예: "bg.png"), 없으면 null
+     blur : 블러 강도 (px), 기본 6
+   ============================================================ */
+var BG = {
+  default: "Images/Backgrounds/료슈방.png",  // 노래 안 틀 때 배경 (null이면 배경 없음)
+  blur: 6,
+};
+
+/* ============================================================
+   ★ LANGUAGE DATABASE — 번역을 여기서 수정하세요
+     기본 언어: "de" (독일어)
+     언어 추가: LANG_DB에 새 키 추가 후 번역 채우기
+     번역 누락 시 자동으로 "de" 값으로 대체됩니다
+   ============================================================ */
+var LANG_DB = {
+  de: {
+    label: "Deutsch",
+    points:            "PUNKTE",
+    click_btn:         "Klicken!",
+    inventory:         "Inventar",
+    shop:              "Shop",
+    shop_title:        "Shop",
+    inv_title:         "Inventar",
+    language:          "Sprache",
+    shop_gacha:        "Ziehen",
+    shop_buy:          "Direkt kaufen",
+    gacha_btn_suffix:  "P Ziehen",
+    inv_subtitle:      "Klicke ein Haustier zum Anlegen/Ablegen",
+    inv_empty:         "Keine Haustiere vorhanden",
+    inv_delete_title:  "Löschmodus",
+    toast_equip:       "{name} in Slot {n} ausgerüstet",
+    toast_unequip:     "{name} abgelegt",
+    toast_full:        "Alle Slots belegt. ✕ drücken zum Ablegen.",
+    toast_delete:      "{name} gelöscht",
+    toast_hint_unequip:"Zum Ablegen ✕ am Slot drücken.",
+    toast_no_points:   "Nicht genug Punkte!",
+    toast_bought:      "{name} gekauft!",
+    gacha_result_title:"Ergebnis!",
+    gacha_result_close:"OK",
+    bonus_label:       "+{total} pro Klick (Basis +{base} + Haustier +{pet})",
+  },
+  ko: {
+    label: "한국어",
+    points:            "포인트",
+    click_btn:         "클릭!",
+    inventory:         "인벤토리",
+    shop:              "상점",
+    shop_title:        "상점",
+    inv_title:         "인벤토리",
+    language:          "언어",
+    shop_gacha:        "뽑기",
+    shop_buy:          "직접 구매",
+    gacha_btn_suffix:  "P 뽑기",
+    inv_subtitle:      "펫을 클릭해 슬롯에 장착/해제합니다",
+    inv_empty:         "보유한 펫이 없습니다",
+    inv_delete_title:  "삭제 모드",
+    toast_equip:       "{name} 슬롯 {n}에 장착",
+    toast_unequip:     "{name} 장착 해제",
+    toast_full:        "슬롯이 가득 찼습니다. 슬롯의 ✕ 버튼으로 해제 후 장착하세요.",
+    toast_delete:      "{name} 삭제됨",
+    toast_hint_unequip:"해제하려면 슬롯의 ✕ 버튼을 눌러주세요.",
+    toast_no_points:   "포인트가 부족합니다!",
+    toast_bought:      "{name} 구매 완료!",
+    gacha_result_title:"뽑기 결과!",
+    gacha_result_close:"확인",
+    bonus_label:       "클릭당 +{total} (기본 +{base} + 펫 +{pet})",
+  },
+  en: {
+    label: "English",
+    points:            "POINTS",
+    click_btn:         "Click!",
+    inventory:         "Inventory",
+    shop:              "Shop",
+    shop_title:        "Shop",
+    inv_title:         "Inventory",
+    language:          "Language",
+    shop_gacha:        "Gacha",
+    shop_buy:          "Direct Buy",
+    gacha_btn_suffix:  "P Draw",
+    inv_subtitle:      "Click a pet to equip/unequip",
+    inv_empty:         "No pets owned",
+    inv_delete_title:  "Delete Mode",
+    toast_equip:       "{name} equipped in slot {n}",
+    toast_unequip:     "{name} unequipped",
+    toast_full:        "All slots full. Press ✕ to unequip.",
+    toast_delete:      "{name} deleted",
+    toast_hint_unequip:"Press ✕ on the slot to unequip.",
+    toast_no_points:   "Not enough points!",
+    toast_bought:      "{name} purchased!",
+    gacha_result_title:"Result!",
+    gacha_result_close:"OK",
+    bonus_label:       "+{total} per click (base +{base} + pet +{pet})",
+  },
+};
+
+var RARITY_DB = [
+  // ★ label_XX: 각 언어별 등급 이름 — 번역 후 채워주세요
+  { id: "normal",    label_de: "Gewöhnlich", label_ko: "일반", label_en: "Common",    borderColor: "#4a7c59", glowColor: null,        textColor: "#4fc87a" },
+  { id: "rare",      label_de: "Selten",     label_ko: "희귀", label_en: "Rare",      borderColor: "#3a6fbf", glowColor: null,        textColor: "#5b9cf0" },
+  { id: "legendary", label_de: "Legendär",   label_ko: "전설", label_en: "Legendary", borderColor: "#b8860b", glowColor: "#b8860b55", textColor: "#f0b030" },
+  { id: "mythic",    label_de: "Mythisch",   label_ko: "신화", label_en: "Mythic",    borderColor: "#9b30ff", glowColor: "#9b30ff66", textColor: "#cc88ff" },
+];
+
+var PET_DB = [
+  // ★ name_XX: 각 언어별 펫 이름 — 번역 후 채워주세요
+  {
+    id: "더미",
+    name_de: "",   // ★ 독일어 번역
+    name_ko: "",
+    name_en: "",   // ★ 영어 번역
+    image: "Images/Sprites/사진이름.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,  // ★ 구매 가격 (포인트), 구매 불가면 null
+    // ★ skillPool: 이 펫에서 나올 수 있는 스킬 목록과 가중치
+    skillPool: [
+      { id: "skill_crit_small", weight: 50 },
+      { id: "skill_lucky_small", weight: 50 },
+    ],
+  },
+  {
+    id: "자동인형_연구원",
+    name_de: "Automanikin der Ring-Korporisten – Forscher",   // ★ 독일어 번역
+    name_ko: "약지 신체파 자동 인형 - 연구원",
+    name_en: "The Ring Corporist Automanikin - Researcher", // ★ 영어 번역
+    image: "Images/Sprites/자동 인형 연구원.png",
+    rarity: "normal", clickBonus: 1, critChance: 0.05, critMult: 1.2,
+    luckyChance: 0, luckyBonus: 0, buyPrice: 50,
+    skillPool: [
+      { id: "skill_crit_small",  weight: 60 },
+      { id: "skill_lucky_small", weight: 40 },
+    ],
+  },
+  {
+    id: "자동인형_전투원",
+    name_de: "Automanikin der Ring-Korporisten – Kämpfer",   // ★ 독일어 번역
+    name_ko: "약지 신체파 자동 인형 - 전투원",
+    name_en: "The Ring Corporist Automanikin - Combatant",   // ★ 영어 번역
+    image: "Images/Sprites/자동 인형 전투원.png",
+    rarity: "normal", clickBonus: 1, critChance: 0.08, critMult: 1.5,
+    luckyChance: 0, luckyBonus: 0, buyPrice: 60,
+    skillPool: [
+      { id: "skill_crit_small", weight: 50 },
+      { id: "skill_crit_big",   weight: 50 },
+    ],
+  },
+  {
+    id: "자동인형_침식",
+    name_de: "Automanikin der Ring-Korporisten – Korrosion der Rosigen Begierde",   // ★ 독일어 번역
+    name_ko: "약지 신체파 자동 인형 - 분홍욕망 침식",
+    name_en: "The Ring Corporist Automanikin - Roseate Desire Corrosion",   // ★ 영어 번역
+    image: "Images/Sprites/자동 인형 침식.png",
+    rarity: "normal", clickBonus: 1.5, critChance: 0.12, critMult: 2.5,
+    luckyChance: 0.02, luckyBonus: 30, buyPrice: 100,
+    skillPool: [
+      { id: "skill_lucky_small", weight: 40 },
+      { id: "skill_lucky_big",   weight: 30 },
+      { id: "skill_all",         weight: 30 },
+    ],
+  },
+  {
+    id: "발렌치나",
+    name_de: "Der Daumen Pflegevater - Valencina",   // ★ 독일어 번역
+    name_ko: "엄지 아비 - 발렌치나",
+    name_en: "The Thumb Nursefather - Valencina",   // ★ 영어 번역
+    image: "Images/Sprites/발렌치나.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "뤼엔1",
+    name_de: "Der Zeiger Pflegevater - Rien (Maske)",   // ★ 독일어 번역
+    name_ko: "검지 아비 - 뤼엔 (가면)",
+    name_en: "The Index Nursefather - Rien (Mask)",   // ★ 영어 번역
+    image: "Images/Sprites/뤼엔1.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "뤼엔2",
+    name_de: "Der Zeiger Pflegevater - Rien",   // ★ 독일어 번역
+    name_ko: "검지 아비 - 뤼엔",
+    name_en: "The Index Nursefather - Rien",   // ★ 영어 번역
+    image: "Images/Sprites/뤼엔2.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "마티아스1",
+    name_de: "Der Mitte Pflegevater - Matthias (Versiegeltes Schwert)",   // ★ 독일어 번역
+    name_ko: "중지 아비 - 마티아스 (봉인된 검)",
+    name_en: "The Middle Nursefather - Matthias (Sealed Sword)",   // ★ 영어 번역
+    image: "Images/Sprites/마티아스1.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "마티아스2",
+    name_de: "Der Mitte Pflegevater - Matthias (Erste Entsiegelung)",   // ★ 독일어 번역
+    name_ko: "중지 아비 - 마티아스 (1단계 봉인 해제)",
+    name_en: "The Middle Nursefather - Matthias (First Seal Removed)",   // ★ 영어 번역
+    image: "Images/Sprites/마티아스2.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "마티아스3",
+    name_de: "Der Mitte Pflegevater - Matthias (Zweite Entsiegelung)",   // ★ 독일어 번역
+    name_ko: "중지 아비 - 마티아스 (2단계 봉인 해제)",
+    name_en: "The Middle Nursefather - Matthias (Second Seal Removed)",   // ★ 영어 번역
+    image: "Images/Sprites/마티아스3.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "마티아스4",
+    name_de: "Der Mitte Pflegevater - Matthias (Lævateinn)",   // ★ 독일어 번역
+    name_ko: "중지 아비 - 마티아스 (레바테인)",
+    name_en: "The Middle Nursefather - Matthias (Lævateinn)",   // ★ 영어 번역
+    image: "Images/Sprites/마티아스4.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "칼리스토",
+    name_de: "Der Ring Pflegevater - Callisto",   // ★ 독일어 번역
+    name_ko: "약지 아비 - 칼리스토",
+    name_en: "The Ring Nursefather - Callisto",   // ★ 영어 번역
+    image: "Images/Sprites/칼리스토.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "지혜성",
+    name_de: "Der Kleine Finger Pflegevater - Shiomi Yoru",   // ★ 독일어 번역
+    name_ko: "약지 아비 - 시오미 요루",
+    name_en: "The Pinky Nursefather - Shiomi Yoru",   // ★ 영어 번역
+    image: "Images/Sprites/지혜성.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "아라야",
+    name_de: "Der Kleine Finger Pflegevater - ???",   // ★ 독일어 번역
+    name_ko: "약지 아비 - 시오미 요루",
+    name_en: "The Pinky Nursefather - ???",   // ★ 영어 번역
+    image: "Images/Sprites/아라야.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "루치오",
+    name_de: "Der Daumen Lehrling - Lucio",   // ★ 독일어 번역
+    name_ko: "엄지 제자 - 루치오",
+    name_en: "The Thumb Apprentice - Lucio",   // ★ 영어 번역
+    image: "Images/Sprites/루치오.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "소라1",
+    name_de: "Der Zeiger Lehrling - Sora",   // ★ 독일어 번역
+    name_ko: "검지 제자 - 소라",
+    name_en: "The Index Apprentice - Sora",   // ★ 영어 번역
+    image: "Images/Sprites/소라1.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "소라1",
+    name_de: "Der Zeiger Lehrling - Sora (E.G.O.)",   // ★ 독일어 번역
+    name_ko: "검지 제자 - 소라 (E.G.O.)",
+    name_en: "The Index Apprentice - Sora (E.G.O.)",   // ★ 영어 번역
+    image: "Images/Sprites/소라2.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "키라",
+    name_de: "Der Mitte Lehrling - Kira",   // ★ 독일어 번역
+    name_ko: "중지 제자 - 키라",
+    name_en: "The Middle Apprentice - Kira",   // ★ 영어 번역
+    image: "Images/Sprites/키라.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "알비나1",
+    name_de: "Der Ring Lehrling - Albina (Rüstung)",   // ★ 독일어 번역
+    name_ko: "약지 제자 - 알비나 (갑옷)",
+    name_en: "The Ring Apprentice - Albina (Armor)",   // ★ 영어 번역
+    image: "Images/Sprites/알비나1.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "알비나2",
+    name_de: "Der Ring Lehrling - Albina",   // ★ 독일어 번역
+    name_ko: "약지 제자 - 알비나",
+    name_en: "The Ring Apprentice - Albina",   // ★ 영어 번역
+    image: "Images/Sprites/알비나2.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+  {
+    id: "렌",
+    name_de: "Der Pinky Lehrling - Ren",   // ★ 독일어 번역
+    name_ko: "소지 제자 - 렌",
+    name_en: "The Pinky Apprentice - Ren",   // ★ 영어 번역
+    image: "Images/Sprites/렌.png",
+    rarity: "normal", clickBonus: 0, critChance: 0, critMult: 0,
+    luckyChance: 0, luckyBonus: 0, buyPrice: null,
+    skillPool: [
+      {}
+    ],
+  },
+];
+
+/* ============================================================
+   ★ SKILL DATABASE — 스킬을 추가/수정하세요
+     id              : 고유 ID (중복 X)
+     name            : 스킬 이름
+     image           : 스킬 이미지 경로 (예: "Images/Skills/skill_a.png")
+     critChanceBonus : 크리티컬 확률 추가 (0~1)
+     critMultBonus   : 크리티컬 배율 추가 (예: 0.5 → 기존 배율 + 0.5)
+     luckyChanceBonus: 럭키 확률 추가 (0~1)
+     luckyBonusBonus : 럭키 보너스 포인트 추가
+   ============================================================ */
+var SKILL_DB = [
+  {
+    id: "아이디",
+    name: "이름",
+    image: "Images/Skills/이름.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+];
+
+var GACHA_DB = [
+  // ★ name_XX / desc_XX: 각 언어별 뽑기 이름과 설명 — 번역 후 채워주세요
+  {
+    id: "엄지상자",
+    name_de: "Der Daumen",      // ★ 독일어 번역
+    name_ko: "엄지",
+    name_en: "The Thumb",       // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",          // ★ 영어 번역
+    cost: 1250,
+    pool:    ["루치오", "발렌치나"],
+    weights: [99, 1],
+  },
+  {
+    id: "검지상자",
+    name_de: "Der Zeiger", // ★ 독일어 번역
+    name_ko: "검지",
+    name_en: "The Index",       // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",               // ★ 영어 번역
+    cost: 750,
+    pool:    ["소라1", "소라2", "뤼엔1", "뤼엔2"],
+    weights: [60, 35, 4, 1],
+  },
+  {
+    id: "중지상자",
+    name_de: "Die Mitte", // ★ 독일어 번역
+    name_ko: "중지",
+    name_en: "The Middle",       // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",          // ★ 영어 번역
+    cost: 1750,
+    pool:    ["키라", "마티아스1", "마티아스2", "마티아스3", "마티아스4"],
+    weights: [60, 25, 10, 4, 1],
+  },
+  {
+    id: "약지상자-신체파",
+    name_de: "Der Ring-Körperfraktion",  // ★ 독일어 번역
+    name_ko: "약지-신체파",
+    name_en: "The Ring-Corporist",        // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",          // ★ 영어 번역
+    cost: 350,
+    pool:    ["자동인형_연구원", "자동인형_전투원", "자동인형_침식", "알비나1", "알비나2", "칼리스토" ],
+    weights: [40, 25, 20, 10, 4, 1],
+  },
+  {
+    id: "약지상자-야수파",
+    name_de: "Der Ring-Fauvistenfraktion",  // ★ 독일어 번역
+    name_ko: "약지-야수파",
+    name_en: "The Ring-Feral Fauvist",        // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",          // ★ 영어 번역
+    cost: 200,
+    pool:    [],
+    weights: [],
+  },
+  {
+    id: "소지상자",
+    name_de: "Der Kleine", // ★ 독일어 번역
+    name_ko: "소지",
+    name_en: "The Pinky",       // ★ 영어 번역
+    desc_de: "", // ★ 독일어 번역
+    desc_ko: "",
+    desc_en: "",             // ★ 영어 번역
+    cost: 1000,
+    pool:    ["렌", "아라야", "지혜성"],
+    weights: [88, 11, 1],
+  },
+];
+
+var MUSIC_DB = [
+  { title_de: "Daumen",  // ★ 독일어
+    title_ko: "엄지",
+    title_en: "Thumb",  // ★ 영어
+    file: "Music/엄지.wav", bg: "Images/Backgrounds/엄지.png" },
+  { title_de: "Zeiger",  // ★ 독일어
+    title_ko: "검지",
+    title_en: "Index",  // ★ 영어
+    file: "Music/검지.mp3", bg: "Images/Backgrounds/검지.png" },
+  { title_de: "Mitte",  // ★ 독일어
+    title_ko: "중지",
+    title_en: "Middle",  // ★ 영어
+    file: "Music/중지.wav", bg: "Images/Backgrounds/중지.png" },
+  { title_de: "Ring",  // ★ 독일어
+    title_ko: "약지",
+    title_en: "Ring",  // ★ 영어
+    file: "Music/약지.wav", bg: "Images/Backgrounds/약지.png" },
+  { title_de: "Kleine",  // ★ 독일어
+    title_ko: "소지",
+    title_en: "Pinky",  // ★ 영어
+    file: "Music/소지.wav", bg: "Images/Backgrounds/소지.png" }
+];
+</script>
+
+<!-- HTML -->
+<!-- 언어 선택 (우측 최상단) -->
+<div id="lang-bar">
+  <button id="lang-btn" onclick="toggleLangMenu()">
+    <span id="lang-label">Sprache</span> ▾
+  </button>
+  <div id="lang-menu"></div>
+</div>
+
+<div id="game">
+  <div id="pet-slots">
+    <div class="pet-slot" id="slot-0" onclick="onSlotClick(0)"><span class="slot-empty-icon">+</span></div>
+    <div class="pet-slot" id="slot-1" onclick="onSlotClick(1)"><span class="slot-empty-icon">+</span></div>
+    <div class="pet-slot" id="slot-2" onclick="onSlotClick(2)"><span class="slot-empty-icon">+</span></div>
+  </div>
+  <div id="center">
+    <div id="score-wrap">
+      <div id="score-label">POINTS</div>
+      <div id="score">0</div>
+      <div id="bonus-label"></div>
+    </div>
+    <button id="click-btn">클릭!</button>
+  </div>
+  <div id="right-panel">
+    <button class="ui-btn" onclick="openInventory()">인벤토리</button>
+    <button class="ui-btn" onclick="openShop()">상점</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="shop-modal">
+  <div class="modal-box">
+    <div class="modal-title"><span id="shop-title">상점</span><button class="modal-close" onclick="closeModal('shop-modal')">✕</button></div>
+    <div class="shop-tabs">
+      <button class="shop-tab active" onclick="switchShopTab('gacha')">뽑기</button>
+      <button class="shop-tab" onclick="switchShopTab('buy')">직접 구매</button>
+    </div>
+    <div class="shop-section active modal-scroll" id="shop-gacha"><div class="gacha-list" id="gacha-list"></div></div>
+    <div class="shop-section modal-scroll" id="shop-buy"><div class="buy-grid" id="buy-grid"></div></div>
+  </div>
+</div>
+
+<div id="gacha-result">
+  <div class="gacha-result-box">
+    <div class="gr-title" id="gr-title">뽑기 결과!</div>
+    <img id="gr-img" class="gr-img" src="" alt="">
+    <div id="gr-name" class="gr-name"></div>
+    <div id="gr-rarity" class="gr-rarity"></div>
+    <div id="gr-stats" class="gr-stats"></div>
+    <button class="gr-close" id="gr-close" onclick="closeGachaResult()">확인</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inv-modal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span id="inv-title">인벤토리</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="inv-delete-btn" onclick="toggleDeleteMode()" title="삭제 모드">🗑</button>
+        <button class="modal-close" onclick="closeModal('inv-modal')">✕</button>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#5a5090;">펫을 클릭해 슬롯에 장착/해제합니다</p>
+    <div class="modal-scroll"><div class="inv-grid" id="inv-grid"></div></div>
+  </div>
+</div>
+
+<div id="music-player">
+  <div id="music-info">
+    <div id="music-icon">♪</div>
+    <div id="music-title">노래 제목</div>
+  </div>
+  <div id="music-controls">
+    <button id="music-toggle" onclick="toggleMusic()" title="재생/일시정지">▶</button>
+    <button id="music-skip" onclick="skipMusic()" title="스킵">⏭</button>
+  </div>
+  <input id="volume-slider" type="range" min="0" max="100" value="50"
+    oninput="setVolume(this.value)" title="볼륨">
+</div>
+
+<!-- 관리자 패널 -->
+<div id="admin-overlay">
+  <div id="admin-box">
+    <div id="admin-title">관리자 패널</div>
+    <div id="admin-row">
+      <input id="admin-input" type="number" placeholder="추가할 포인트" min="0">
+      <button id="admin-add-btn" onclick="adminAddPoints()">추가</button>
+    </div>
+    <button id="admin-close-btn" onclick="closeAdmin()">닫기</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ★ 게임 로직 — 모든 함수가 하나의 스크립트 블록 안에 있음 -->
+<script>
+  /* ---- 상태 ---- */
+  const BASE_CLICK = 1;
+  let points      = 0;
+  let inventory   = [];
+  let equipped    = [null, null, null];
+  let pendingSlot = null;
+  let deleteMode  = false;
+
+  function toggleDeleteMode() {
+    deleteMode = !deleteMode;
+    const btn = document.getElementById('inv-delete-btn');
+    btn.classList.toggle('active', deleteMode);
+    // 카드들에 delete-mode 클래스 토글
+    document.querySelectorAll('.inv-card').forEach(card => {
+      card.classList.toggle('delete-mode', deleteMode);
+    });
+  }
+
+  /* ---- DB 헬퍼 ---- */
+  function getPet(id)    { return PET_DB.find(p => p.id === id); }
+  function getRarity(id) { return RARITY_DB.find(r => r.id === id); }
+  function getSkill(id)  { return typeof SKILL_DB !== 'undefined' ? SKILL_DB.find(s => s.id === id) : null; }
+
+  function rollSkill(pet) {
+    if (!pet.skillPool || pet.skillPool.length === 0) return null;
+    var totalW = pet.skillPool.reduce(function(a, s) { return a + s.weight; }, 0);
+    var rand = Math.random() * totalW;
+    for (var i = 0; i < pet.skillPool.length; i++) {
+      rand -= pet.skillPool[i].weight;
+      if (rand <= 0) return pet.skillPool[i].id;
+    }
+    return pet.skillPool[pet.skillPool.length - 1].id;
+  }
+
+  function skillBuffText(skill) {
+    var lines = [];
+    if (skill.critChanceBonus  > 0) lines.push('크리 확률 +' + Math.round(skill.critChanceBonus * 100) + '%');
+    if (skill.critMultBonus    > 0) lines.push('크리 배율 +' + skill.critMultBonus + 'x');
+    if (skill.luckyChanceBonus > 0) lines.push('럭키 확률 +' + Math.round(skill.luckyChanceBonus * 100) + '%');
+    if (skill.luckyBonusBonus  > 0) lines.push('럭키 보너스 +' + skill.luckyBonusBonus + 'P');
+    return lines.join(' / ');
+  }
+  function petName(pet)    { var l=typeof currentLang!=='undefined'?currentLang:'ko'; return pet['name_'+l]||pet['name_ko']||pet.id; }
+  function rarityLabel(rd) { var l=typeof currentLang!=='undefined'?currentLang:'ko'; return rd['label_'+l]||rd['label_ko']||rd.id; }
+  function gachaName(g)    { var l=typeof currentLang!=='undefined'?currentLang:'ko'; return g['name_'+l]||g['name_ko']||g.id; }
+  function gachaDesc(g)    { var l=typeof currentLang!=='undefined'?currentLang:'ko'; return g['desc_'+l]||g['desc_ko']||''; }
+  function trackTitle(tr)  { var l=typeof currentLang!=='undefined'?currentLang:'ko'; return tr['title_'+l]||tr['title_ko']||''; }
+
+  /* ---- 저장/불러오기 ---- */
+  function save() {
+    localStorage.setItem('clicker_points',    JSON.stringify(points));
+    localStorage.setItem('clicker_inventory', JSON.stringify(inventory));
+    localStorage.setItem('clicker_equipped',  JSON.stringify(equipped));
+  }
+  function load() {
+    try {
+      points    = JSON.parse(localStorage.getItem('clicker_points'))    ?? 0;
+      inventory = JSON.parse(localStorage.getItem('clicker_inventory')) ?? [];
+      equipped  = JSON.parse(localStorage.getItem('clicker_equipped'))  ?? [null, null, null];
+      equipped  = equipped.map(id => (id && getPet(id)) ? id : null);
+      inventory = inventory.filter(item => getPet(item.petId));
+    } catch(e) {}
+  }
+
+  /* ---- 점수 표시 ---- */
+  function updateScore() {
+    document.getElementById('score').textContent = points.toLocaleString();
+    let totalBonus = 0;
+    if (equipped) equipped.forEach(id => {
+      if (!id) return;
+      const pet = getPet(id);
+      if (pet) totalBonus += pet.clickBonus;
+    });
+    const bl = document.getElementById('bonus-label');
+    if (bl) bl.textContent = totalBonus > 0
+      ? (typeof t === 'function' ? t('bonus_label', {total:totalBonus+BASE_CLICK, base:BASE_CLICK, pet:totalBonus}) : '+' + (totalBonus+BASE_CLICK))
+      : '';
+  }
+
+  /* ---- 이펙트 ---- */
+  function spawnFloat(x, y, text, type) {
+    const el = document.createElement('div');
+    el.className = 'float-num ' + type;
+    el.textContent = text;
+    el.style.left = (x - 16 + (Math.random() * 24 - 12)) + 'px';
+    el.style.top  = (y - 10) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 950);
+  }
+  function triggerLuckyFlash(slotIdx) {
+    const slot = document.getElementById('slot-' + slotIdx);
+    const fl = document.createElement('div');
+    fl.className = 'lucky-flash';
+    slot.appendChild(fl);
+    setTimeout(() => fl.remove(), 600);
+  }
+
+  /* ---- 클릭 ---- */
+  document.getElementById('click-btn').addEventListener('click', function(e) {
+    let gained = BASE_CLICK;
+    let isCrit = false;
+    equipped.forEach(id => {
+      if (!id) return;
+      const pet = getPet(id);
+      if (!pet) return;
+      gained += pet.clickBonus;
+      var invItem2 = inventory.find(function(it) { return it.petId === id; });
+      var sk2 = invItem2 && invItem2.skillId ? getSkill(invItem2.skillId) : null;
+      var totalCrit  = pet.critChance + (sk2 ? sk2.critChanceBonus : 0);
+      var totalMult  = pet.critMult   + (sk2 ? sk2.critMultBonus   : 0);
+      if (totalCrit > 0 && Math.random() < totalCrit) {
+        gained += Math.floor(gained * (totalMult - 1));
+        isCrit = true;
+      }
+    });
+    points += Math.floor(gained);
+    updateScore(); save();
+    spawnFloat(e.clientX, e.clientY, '+' + gained, isCrit ? 'crit' : 'normal');
+    if (isCrit) {
+      const btn = document.getElementById('click-btn');
+      btn.classList.remove('crit-flash');
+      void btn.offsetWidth;
+      btn.classList.add('crit-flash');
+    }
+    equipped.forEach((id, si) => {
+      if (!id) return;
+      const pet = getPet(id);
+      if (!pet) return;
+      var invItem3 = inventory.find(function(it) { return it.petId === id; });
+      var sk3 = invItem3 && invItem3.skillId ? getSkill(invItem3.skillId) : null;
+      var totalLuckyChance = pet.luckyChance + (sk3 ? sk3.luckyChanceBonus : 0);
+      var totalLuckyBonus  = pet.luckyBonus  + (sk3 ? sk3.luckyBonusBonus  : 0);
+      if (totalLuckyChance <= 0) return;
+      if (Math.random() < totalLuckyChance) {
+        points += Math.floor(totalLuckyBonus);
+        updateScore(); save();
+        spawnFloat(e.clientX, e.clientY - 40, '★+' + totalLuckyBonus, 'lucky');
+        triggerLuckyFlash(si);
+      }
+    });
+    const sc = document.getElementById('score');
+    sc.classList.remove('bump');
+    void sc.offsetWidth;
+    sc.classList.add('bump');
+    setTimeout(() => sc.classList.remove('bump'), 100);
+  });
+
+  /* ---- 슬롯 렌더링 ---- */
+  function renderSlots() {
+    for (let i = 0; i < 3; i++) {
+      const slot = document.getElementById('slot-' + i);
+      const id = equipped[i];
+      slot.innerHTML = '';
+      slot.className = 'pet-slot';
+      slot.style.borderColor = '';
+      slot.style.boxShadow   = '';
+      if (id) {
+        const pet = getPet(id);
+        const rd  = getRarity(pet.rarity);
+        slot.classList.add('occupied');
+        slot.style.borderColor = rd ? rd.borderColor : '#3a3460';
+        if (rd && rd.glowColor) slot.style.boxShadow = '0 0 12px ' + rd.glowColor;
+        const img = document.createElement('img');
+        img.src = pet.image; img.alt = pet.name;
+        img.onerror = () => img.style.display = 'none';
+        const nm = document.createElement('div');
+        nm.className = 'slot-name'; nm.textContent = petName(pet);
+        const un = document.createElement('div');
+        un.className = 'slot-unequip'; un.textContent = '✕';
+        un.onclick = (e) => { e.stopPropagation(); unequipPet(i); };
+        slot.appendChild(img); slot.appendChild(nm); slot.appendChild(un);
+        // 스킬 아이콘
+        var invItem = inventory.find(function(item) { return item.petId === id; });
+        if (invItem && invItem.skillId) {
+          var sk = getSkill(invItem.skillId);
+          if (sk) {
+            var si = document.createElement('div');
+            si.className = 'slot-skill';
+            si.title = sk.name + ': ' + skillBuffText(sk);
+            var skImg = document.createElement('img');
+            skImg.src = sk.image; skImg.alt = sk.name;
+            skImg.onerror = function() { si.style.display = 'none'; };
+            si.appendChild(skImg);
+            slot.appendChild(si);
+          }
+        }
+      } else {
+        const ic = document.createElement('span');
+        ic.className = 'slot-empty-icon'; ic.textContent = '+';
+        slot.appendChild(ic);
+      }
+    }
+    updateScore();
+  }
+
+  /* ---- 장착/해제 ---- */
+  function equipPet(petId, slotIdx) {
+    equipped = equipped.map(e => e === petId ? null : e);
+    equipped[slotIdx] = petId;
+    renderSlots(); save();
+  }
+  function unequipPet(slotIdx) { equipped[slotIdx] = null; renderSlots(); save(); }
+  function onSlotClick(slotIdx) { pendingSlot = slotIdx; openInventory(); }
+
+  /* ---- 인벤토리 ---- */
+  function openInventory() {
+    const grid = document.getElementById('inv-grid');
+    grid.innerHTML = '';
+    if (inventory.length === 0) {
+      grid.innerHTML = '<div class="inv-empty">' + t('inv_empty') + '</div>';
+    } else {
+      inventory.forEach(({ petId, uid, skillId }) => {
+        const pet = getPet(petId);
+        if (!pet) return;
+        const rd = getRarity(pet.rarity);
+        const card = document.createElement('div');
+        card.className = 'inv-card' + (equipped.includes(petId) ? ' equipped' : '');
+        const idx = equipped.indexOf(petId);
+        if (idx !== -1) {
+          const badge = document.createElement('div');
+          badge.className = 'equipped-badge';
+          badge.textContent = '슬롯' + (idx + 1);
+          card.appendChild(badge);
+        }
+        const img = document.createElement('img');
+        img.src = pet.image; img.alt = pet.name;
+        img.onerror = () => img.style.display = 'none';
+        const nm = document.createElement('div');
+        nm.className = 'ic-name'; nm.textContent = petName(pet);
+        const rr = document.createElement('div');
+        rr.className = 'ic-stats';
+        rr.style.color = rd ? rd.textColor : '#e8e0ff';
+        rr.textContent = rd ? rarityLabel(rd) : pet.rarity;
+        const st = document.createElement('div');
+        st.className = 'ic-stats';
+        const lines = ['클릭 +' + pet.clickBonus];
+        if (pet.critChance > 0) lines.push('크리 ' + Math.round(pet.critChance*100) + '%×' + pet.critMult);
+        if (pet.luckyChance > 0) lines.push('럭키 ' + Math.round(pet.luckyChance*100) + '%');
+        st.textContent = lines.join(' / ');
+        card.appendChild(img); card.appendChild(nm); card.appendChild(rr); card.appendChild(st);
+        if (deleteMode) card.classList.add('delete-mode');
+
+        card.onclick = () => {
+          if (deleteMode) {
+            // 삭제 모드 → 카드 클릭 시 삭제
+            equipped = equipped.map(e => e === petId ? null : e);
+            inventory = inventory.filter(item => item.uid !== uid);
+            save(); renderSlots(); openInventory();
+            showToast(t('toast_delete', {name:petName(pet)}));
+          } else if (pendingSlot !== null) {
+            // 슬롯 클릭으로 인벤토리 열었을 때 → 해당 슬롯에 장착
+            equipPet(petId, pendingSlot); pendingSlot = null; closeModal('inv-modal');
+          } else {
+            // 일반 모드 → 장착/해제
+            const emptySlot = equipped.indexOf(null);
+            if (equipped.includes(petId)) {
+              equipped = equipped.map(e => e === petId ? null : e);
+              save(); renderSlots(); openInventory();
+              showToast(t('toast_unequip', {name:petName(pet)}));
+            } else if (emptySlot !== -1) {
+              equipPet(petId, emptySlot); closeModal('inv-modal');
+              showToast(t('toast_equip', {name:petName(pet), n:emptySlot+1}));
+            } else {
+              showToast(t('toast_full'));
+            }
+          }
+        };
+        // 스킬 배지
+        if (skillId) {
+          var skill = getSkill(skillId);
+          if (skill) {
+            var badge = document.createElement('div');
+            badge.className = 'skill-badge';
+            badge.style.pointerEvents = 'none';
+            var sImg = document.createElement('img');
+            sImg.src = skill.image; sImg.alt = skill.name;
+            sImg.onerror = function() { sImg.style.display = 'none'; };
+            var sText = document.createElement('div');
+            sText.className = 'skill-badge-text';
+            sText.textContent = skill.name + ': ' + skillBuffText(skill);
+            badge.appendChild(sImg); badge.appendChild(sText);
+            card.appendChild(badge);
+          }
+        }
+
+        grid.appendChild(card);
+      });
+    }
+    openModal('inv-modal');
+  }
+
+  /* ---- 상점 ---- */
+  function openShop() { renderShopGacha(); renderShopBuy(); openModal('shop-modal'); }
+  function switchShopTab(tab) {
+    document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.shop-section').forEach(s => s.classList.remove('active'));
+    if (tab === 'gacha') {
+      document.querySelectorAll('.shop-tab')[0].classList.add('active');
+      document.getElementById('shop-gacha').classList.add('active');
+    } else {
+      document.querySelectorAll('.shop-tab')[1].classList.add('active');
+      document.getElementById('shop-buy').classList.add('active');
+    }
+  }
+  function renderShopGacha() {
+    const list = document.getElementById('gacha-list');
+    list.innerHTML = '';
+    GACHA_DB.forEach(g => {
+      const totalW = g.weights.reduce((a,b) => a+b, 0);
+      const rateStr = g.pool.map((id, i) => {
+        const pet = getPet(id);
+        return (pet ? petName(pet) : id) + ' ' + Math.round(g.weights[i] / totalW * 100) + '%';
+      }).join(' · ');
+      const card = document.createElement('div');
+      card.className = 'gacha-card';
+      card.innerHTML = `
+        <div class="gacha-info">
+          <h3>${gachaName(g)}</h3><p>${gachaDesc(g)}</p>
+          <div class="gacha-rates">${rateStr}</div>
+        </div>
+        <button class="gacha-btn" onclick="doGacha('${g.id}')">${g.cost.toLocaleString()} ${t('gacha_btn_suffix')}</button>`;
+      list.appendChild(card);
+    });
+  }
+  function renderShopBuy() {
+    const grid = document.getElementById('buy-grid');
+    grid.innerHTML = '';
+    PET_DB.filter(p => p.buyPrice !== null).forEach(pet => {
+      const rd = getRarity(pet.rarity);
+      const card = document.createElement('div');
+      card.className = 'buy-card';
+      card.innerHTML = `
+        <img src="${pet.image}" alt="${petName(pet)}" onerror="this.style.display='none'">
+        <div class="bc-name">${petName(pet)}</div>
+        <div class="bc-rarity" style="color:${rd ? rd.textColor : '#e8e0ff'}">${rd ? rarityLabel(rd) : pet.rarity}</div>
+        <div class="bc-price">${pet.buyPrice.toLocaleString()}P</div>`;
+      card.onclick = () => buyPet(pet.id);
+      grid.appendChild(card);
+    });
+  }
+  function doGacha(gachaId) {
+    const g = GACHA_DB.find(x => x.id === gachaId);
+    if (!g) return;
+    if (points < g.cost) { showToast(t('toast_no_points')); return; }
+    points -= g.cost; updateScore(); save();
+    const totalW = g.weights.reduce((a,b) => a+b, 0);
+    let rand = Math.random() * totalW;
+    let petId = g.pool[g.pool.length - 1];
+    for (let i = 0; i < g.pool.length; i++) { rand -= g.weights[i]; if (rand <= 0) { petId = g.pool[i]; break; } }
+    addToInventory(petId); showGachaResult(petId);
+  }
+  function buyPet(petId) {
+    const pet = getPet(petId);
+    if (!pet || pet.buyPrice === null) return;
+    if (points < pet.buyPrice) { showToast(t('toast_no_points')); return; }
+    points -= pet.buyPrice; updateScore();
+    addToInventory(petId); save();
+    showToast(t('toast_bought', {name:petName(pet)})); renderShopBuy();
+  }
+  function addToInventory(petId) {
+    var pet = getPet(petId);
+    var skillId = pet ? rollSkill(pet) : null;
+    inventory.push({ petId: petId, uid: Date.now() + Math.random(), skillId: skillId });
+    save();
+  }
+  function showGachaResult(petId) {
+    const pet = getPet(petId); if (!pet) return;
+    const rd = getRarity(pet.rarity);
+    document.getElementById('gr-img').src = pet.image;
+    document.getElementById('gr-name').textContent = pet.name;
+    const rEl = document.getElementById('gr-rarity');
+    rEl.textContent = rd ? rarityLabel(rd) : pet.rarity;
+    rEl.style.color = rd ? rd.textColor : '#e8e0ff';
+    const lines = ['클릭 +' + pet.clickBonus];
+    if (pet.critChance > 0) lines.push('크리티컬 ' + Math.round(pet.critChance*100) + '% × ' + pet.critMult + '배');
+    if (pet.luckyChance > 0) lines.push('럭키 ' + Math.round(pet.luckyChance*100) + '% → +' + pet.luckyBonus + 'P');
+    document.getElementById('gr-stats').innerHTML = lines.join('<br>');
+    closeModal('shop-modal');
+    document.getElementById('gacha-result').classList.add('open');
+  }
+  function closeGachaResult() { document.getElementById('gacha-result').classList.remove('open'); }
+
+  /* ---- 모달 ---- */
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    pendingSlot = null;
+    // 인벤토리 닫을 때 삭제 모드 초기화
+    if (id === 'inv-modal') {
+      deleteMode = false;
+      const btn = document.getElementById('inv-delete-btn');
+      if (btn) btn.classList.remove('active');
+    }
+  }
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => {
+      if (e.target === ov) {
+        ov.classList.remove('open');
+        pendingSlot = null;
+        // 인벤토리 바깥 클릭 시에도 삭제 모드 초기화
+        if (ov.id === 'inv-modal') {
+          deleteMode = false;
+          const btn = document.getElementById('inv-delete-btn');
+          if (btn) btn.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- 토스트 ---- */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  /* ---- 음악 ---- */
+  let musicIdx = 0, musicPlaying = false;
+  const audio = new Audio();
+  audio.volume = 0.5;
+  function initMusic() {
+    if (MUSIC_DB.length === 0) { document.getElementById('music-player').style.display = 'none'; return; }
+    document.getElementById('music-title').textContent = trackTitle(MUSIC_DB[0]);
+    audio.src = MUSIC_DB[0].file;
+    audio.load();
+    audio.addEventListener('ended', () => { if (musicPlaying) nextTrack(); });
+  }
+  let trackChanging = false;
+  function nextTrack() {
+    if (trackChanging) return;
+    trackChanging = true;
+    loadTrack(musicIdx + 1);
+    audio.play().catch(() => {}).finally(() => { trackChanging = false; });
+    applyTrackBg();
+  }
+  function loadTrack(idx) {
+    musicIdx = ((idx % MUSIC_DB.length) + MUSIC_DB.length) % MUSIC_DB.length;
+    const track = MUSIC_DB[musicIdx];
+    audio.src = track.file;
+    document.getElementById('music-title').textContent = trackTitle(track);
+    if (musicPlaying) audio.load();
+  }
+  function applyTrackBg() {
+    const track = MUSIC_DB[musicIdx];
+    setBg(track.bg || BG.default);
+  }
+  function setVolume(val) {
+    audio.volume = val / 100;
+  }
+
+  function toggleMusic() {
+    if (musicPlaying) {
+      audio.pause(); musicPlaying = false;
+      document.getElementById('music-toggle').textContent = '▶';
+      document.getElementById('music-player').classList.add('paused');
+      setBg(BG.default); // 일시정지 시 기본 배경
+    } else {
+      if (!audio.src || audio.src === window.location.href) loadTrack(musicIdx);
+      audio.play().then(() => {
+        musicPlaying = true;
+        document.getElementById('music-toggle').textContent = '⏸';
+        document.getElementById('music-player').classList.remove('paused');
+        applyTrackBg();
+      }).catch(() => showToast('브라우저 정책으로 재생이 차단됐습니다. 다시 눌러주세요.'));
+    }
+  }
+  function skipMusic() {
+    const was = musicPlaying; loadTrack(musicIdx + 1);
+    if (was) { musicPlaying = true; document.getElementById('music-toggle').textContent = '⏸'; document.getElementById('music-player').classList.remove('paused'); audio.play().catch(() => {}); applyTrackBg(); }
+  }
+
+  /* ---- 배경 적용 ---- */
+  function setBg(file) {
+    const layer = document.getElementById('bg-layer');
+    if (!file) {
+      layer.style.backgroundImage = '';
+      layer.style.filter = 'blur(0px)';
+    } else {
+      layer.style.backgroundImage = 'url("' + file + '")';
+      layer.style.filter = 'blur(' + BG.blur + 'px)';
+    }
+  }
+  function initBg() {
+    setBg(BG.default);
+  }
+
+  /* ---- 언어 시스템 ---- */
+  let currentLang = 'de';
+
+  function t(key, vars = {}) {
+    const lang = LANG_DB[currentLang] || LANG_DB['de'];
+    let str = (lang[key] !== undefined ? lang[key] : LANG_DB['de'][key]) || key;
+    for (const [k, v] of Object.entries(vars)) str = str.replaceAll('{'+k+'}', v);
+    return str;
+  }
+
+  function applyLang() {
+    document.getElementById('score-label').textContent = t('points');
+    document.getElementById('click-btn').textContent   = t('click_btn');
+    document.getElementById('lang-label').textContent  = t('language');
+    const invBtn  = document.querySelector('.ui-btn[onclick="openInventory()"]');
+    const shopBtn = document.querySelector('.ui-btn[onclick="openShop()"]');
+    if (invBtn)  invBtn.textContent  = t('inventory');
+    if (shopBtn) shopBtn.textContent = t('shop');
+    const shopTitle = document.getElementById('shop-title');
+    const invTitle  = document.getElementById('inv-title');
+    if (shopTitle) shopTitle.textContent = t('shop_title');
+    if (invTitle)  invTitle.textContent  = t('inv_title');
+    const grTitle = document.getElementById('gr-title');
+    const grClose = document.getElementById('gr-close');
+    if (grTitle) grTitle.textContent = t('gacha_result_title');
+    if (grClose) grClose.textContent = t('gacha_result_close');
+    const tabs = document.querySelectorAll('.shop-tab');
+    if (tabs[0]) tabs[0].textContent = t('shop_gacha');
+    if (tabs[1]) tabs[1].textContent = t('shop_buy');
+    const invSub = document.querySelector('#inv-modal p');
+    if (invSub) invSub.textContent = t('inv_subtitle');
+    // 음악 제목 갱신
+    if (typeof musicIdx !== 'undefined' && MUSIC_DB[musicIdx]) {
+      const titleEl = document.getElementById('music-title');
+      if (titleEl) titleEl.textContent = trackTitle(MUSIC_DB[musicIdx]);
+    }
+    // 언어 메뉴 렌더링
+    const menu = document.getElementById('lang-menu');
+    if (menu) {
+      menu.innerHTML = '';
+      Object.entries(LANG_DB).forEach(([code, data]) => {
+        const opt = document.createElement('div');
+        opt.className = 'lang-option' + (code === currentLang ? ' active' : '');
+        opt.textContent = data.label;
+        opt.onclick = () => setLang(code);
+        menu.appendChild(opt);
+      });
+    }
+    updateScore();
+  }
+
+  function setLang(code) {
+    currentLang = code;
+    localStorage.setItem('clicker_lang', code);
+    applyLang();
+    if (document.getElementById('shop-modal').classList.contains('open')) { renderShopGacha(); renderShopBuy(); }
+    if (document.getElementById('inv-modal').classList.contains('open'))  openInventory();
+    toggleLangMenu(false);
+  }
+
+  function toggleLangMenu(force) {
+    const menu = document.getElementById('lang-menu');
+    const open = force !== undefined ? force : !menu.classList.contains('open');
+    menu.classList.toggle('open', open);
+  }
+
+  document.addEventListener('click', e => {
+    const bar = document.getElementById('lang-bar');
+    if (bar && !bar.contains(e.target)) toggleLangMenu(false);
+  });
+
+  function initLang() {
+    const saved = localStorage.getItem('clicker_lang');
+    currentLang = (saved && LANG_DB[saved]) ? saved : 'de';
+    applyLang();
+  }
+
+  /* ---- 관리자 패널 ---- */
+  var adminBuffer = '';
+  var ADMIN_PW = 'rain90op';
+
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT') return;
+    adminBuffer += e.key;
+    if (adminBuffer.length > ADMIN_PW.length)
+      adminBuffer = adminBuffer.slice(-ADMIN_PW.length);
+    if (adminBuffer === ADMIN_PW) { openAdmin(); adminBuffer = ''; }
+  });
+
+  function openAdmin() {
+    document.getElementById('admin-overlay').classList.add('open');
+    document.getElementById('admin-input').value = '';
+    setTimeout(function() { document.getElementById('admin-input').focus(); }, 50);
+  }
+  function closeAdmin() {
+    document.getElementById('admin-overlay').classList.remove('open');
+  }
+  function adminAddPoints() {
+    var val = parseInt(document.getElementById('admin-input').value);
+    if (isNaN(val) || val <= 0) { showToast('올바른 숫자를 입력해주세요.'); return; }
+    points += val;
+    updateScore(); save();
+    showToast('+' + val.toLocaleString() + ' 포인트 추가됨');
+    document.getElementById('admin-input').value = '';
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('admin-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') adminAddPoints();
+      if (e.key === 'Escape') closeAdmin();
+    });
+    document.getElementById('admin-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeAdmin();
+    });
+  });
+
+  /* ---- 초기화 ---- */
+  load();
+  initLang();
+  renderSlots();
+  updateScore();
+  initBg();
+  initMusic();
+</script>
+</body>
+</html>
