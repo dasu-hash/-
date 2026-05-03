@@ -485,8 +485,7 @@ var PET_DB = [
     luckyChance: 0, luckyBonus: 0, buyPrice: null,  // ★ 구매 가격 (포인트), 구매 불가면 null
     // ★ skillPool: 이 펫에서 나올 수 있는 스킬 목록과 가중치
     skillPool: [
-      { id: "skill_crit_small", weight: 50 },
-      { id: "skill_lucky_small", weight: 50 },
+      { id: "", weight: 0 }
     ],
   },
   {
@@ -498,8 +497,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 1, critChance: 0.03, critMult: 1.15,
     luckyChance: 0, luckyBonus: 0, buyPrice: 50,
     skillPool: [
-      { id: "skill_crit_small",  weight: 60 },
-      { id: "skill_lucky_small", weight: 40 },
+      { id: "", weight: 0 }
     ],
   },
   {
@@ -533,7 +531,14 @@ var PET_DB = [
     rarity: "normal", clickBonus: 12, critChance: 0.09, critMult: 2.25,
     luckyChance: 0.04, luckyBonus: 45, buyPrice: null,
     skillPool: [
-      {}
+      { id: "이연참1",  weight: 27 },
+      { id: "삼연격1",  weight: 25 },
+      { id: "천퇴성도 장전",  weight: 15 },
+      { id: "이연참2",  weight: 11 },
+      { id: "삼연격2",  weight: 8.5 },
+      { id: "폭쇄참",  weight: 7.5 },
+      { id: "쾌도난마",  weight: 5 },
+      { id: "초절맹호살격난참",  weight: 1 }
     ],
   },
   {
@@ -545,7 +550,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: -1000, critChance: 1, critMult: 0.01,
     luckyChance: 1, luckyBonus: -750, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -557,7 +562,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 4, critChance: 0.04, critMult: 3.75,
     luckyChance: 0.0008, luckyBonus: 1000, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -569,7 +574,16 @@ var PET_DB = [
     rarity: "normal", clickBonus: -3, critChance: 0.22, critMult: 6,
     luckyChance: 0.12, luckyBonus: 120, buyPrice: null,
     skillPool: [
-      {}
+      { id: "뤼엔1",  weight: 22 },
+      { id: "뤼엔2",  weight: 18 },
+      { id: "뤼엔3",  weight: 14 },
+      { id: "뤼엔4",  weight: 12 },
+      { id: "뤼엔5",  weight: 9 },
+      { id: "뤼엔6",  weight: 7 },
+      { id: "뤼엔7",  weight: 6 },
+      { id: "뤼엔8",  weight: 5 },
+      { id: "뤼엔9",  weight: 4 },
+      { id: "뤼엔10",  weight: 3 },
     ],
   },
   {
@@ -581,7 +595,18 @@ var PET_DB = [
     rarity: "normal", clickBonus: -4, critChance: 0.25, critMult: 8,
     luckyChance: 0.15, luckyBonus: 220, buyPrice: null,
     skillPool: [
-      {}
+      { id: "뤼엔11",  weight: 21.5 },
+      { id: "뤼엔12",  weight: 16 },
+      { id: "뤼엔13",  weight: 13 },
+      { id: "뤼엔14",  weight: 10 },
+      { id: "뤼엔15",  weight: 8 },
+      { id: "뤼엔16",  weight: 7 },
+      { id: "뤼엔17",  weight: 6 },
+      { id: "뤼엔18",  weight: 5 },
+      { id: "뤼엔19",  weight: 4 },
+      { id: "뤼엔20",  weight: 3.5 },
+      { id: "뤼엔21",  weight: 3 },
+      { id: "뤼엔22",  weight: 2.5 },
     ],
   },
   {
@@ -593,7 +618,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 9, critChance: 0, critMult: 0,
     luckyChance: 0.005, luckyBonus: 30, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -605,7 +630,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 11, critChance: 0.01, critMult: 1.5,
     luckyChance: 0.005, luckyBonus: 45, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -617,7 +642,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 13, critChance: 0.01, critMult: 1.75,
     luckyChance: 0.005, luckyBonus: 60, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -629,7 +654,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 17, critChance: 0.01, critMult: 2,
     luckyChance: 0.005, luckyBonus: 120, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -641,7 +666,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 6, critChance: 0.03, critMult: 1.8,
     luckyChance: 0.005, luckyBonus: 25, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -653,7 +678,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 3, critChance: 0.1, critMult: 6.5,
     luckyChance: 0.0075, luckyBonus: 120, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -665,7 +690,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 1, critChance: 0.04, critMult: 9,
     luckyChance: 0.001, luckyBonus: 400, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -677,7 +702,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 5, critChance: 0.05, critMult: 1.8,
     luckyChance: 0.0075, luckyBonus: 35, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -689,7 +714,10 @@ var PET_DB = [
     rarity: "normal", clickBonus: -1, critChance: 0, critMult: 0,
     luckyChance: 0.08, luckyBonus: 18, buyPrice: null,
     skillPool: [
-      {}
+      { id: "소라1",  weight: 40 },
+      { id: "소라2",  weight: 30 },
+      { id: "소라3",  weight: 20 },
+      { id: "소라4",  weight: 10 }
     ],
   },
   {
@@ -701,19 +729,46 @@ var PET_DB = [
     rarity: "normal", clickBonus: -2, critChance: 0, critMult: 0,
     luckyChance: 0.1, luckyBonus: 45, buyPrice: null,
     skillPool: [
-      {}
+      { id: "소라5",  weight: 28 },
+      { id: "소라6",  weight: 22 },
+      { id: "소라7",  weight: 18 },
+      { id: "소라8",  weight: 14 },
+      { id: "소라9",  weight: 10 },
+      { id: "소라10",  weight: 8 }
     ],
   },
   {
-    id: "키라",
+    id: "키라1",
     name_de: "Der Mitte Lehrling - Kira",   // ★ 독일어 번역
     name_ko: "중지 제자 - 키라",
     name_en: "The Middle Apprentice - Kira",   // ★ 영어 번역
-    image: "Images/Sprites/키라.png",
+    image: "Images/Sprites/키라1.png",
     rarity: "normal", clickBonus: 7, critChance: 0, critMult: 0,
     luckyChance: 0.005, luckyBonus: 20, buyPrice: null,
     skillPool: [
-      {}
+      { id: "키라1",  weight: 30 },
+      { id: "키라2",  weight: 23 },
+      { id: "키라3",  weight: 18 },
+      { id: "키라4",  weight: 13 },
+      { id: "키라5",  weight: 9 },
+      { id: "키라6",  weight: 7 },
+    ],
+  },
+  {
+    id: "키라2",
+    name_de: "Der Mitte Lehrling - Kira",   // ★ 독일어 번역
+    name_ko: "중지 제자 - 키라",
+    name_en: "The Middle Apprentice - Kira",   // ★ 영어 번역
+    image: "Images/Sprites/키라2.png",
+    rarity: "normal", clickBonus: 8, critChance: 0, critMult: 0,
+    luckyChance: 0.01, luckyBonus: 25, buyPrice: null,
+    skillPool: [
+      { id: "키라1",  weight: 30 },
+      { id: "키라2",  weight: 23 },
+      { id: "키라3",  weight: 18 },
+      { id: "키라4",  weight: 13 },
+      { id: "키라5",  weight: 9 },
+      { id: "키라6",  weight: 7 },
     ],
   },
   {
@@ -725,7 +780,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 3, critChance: 0.03, critMult: 1.5,
     luckyChance: 0.01, luckyBonus: 12, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -737,7 +792,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 4, critChance: 0.04, critMult: 1.65,
     luckyChance: 0.01, luckyBonus: 18, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
   {
@@ -749,7 +804,7 @@ var PET_DB = [
     rarity: "normal", clickBonus: 2, critChance: 0.08, critMult: 3,
     luckyChance: 0.005, luckyBonus: 20, buyPrice: null,
     skillPool: [
-      {}
+      { id: "",  weight: 0 },
     ],
   },
 ];
@@ -767,11 +822,436 @@ var PET_DB = [
 var SKILL_DB = [
   {
     id: "아이디",
-    name: "이름",
+    name_de: "",  // ★ 독일어
+    name_ko: "이름",
+    name_en: "",  // ★ 영어
     image: "Images/Skills/이름.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
+  {
+    id: "이연참1",
+    name_de: "이연참",  // ★ 독일어
+    name_ko: "이연참",
+    name_en: "이연참",  // ★ 영어
+    image: "Images/Skills/뇌횡/114501.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "이연참2",
+    name_de: "이연참-폭[爆]",  // ★ 독일어
+    name_ko: "이연참-폭[爆]",
+    name_en: "이연참-폭[爆]",  // ★ 영어
+    image: "Images/Skills/뇌횡/114501.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "삼연격1",
+    name_de: "삼연격",  // ★ 독일어
+    name_ko: "삼연격",
+    name_en: "삼연격",  // ★ 영어
+    image: "Images/Skills/뇌횡/114502.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "삼연격2",
+    name_de: "삼연격-폭[爆]",  // ★ 독일어
+    name_ko: "삼연격-폭[爆]",
+    name_en: "삼연격-폭[爆]",  // ★ 영어
+    image: "Images/Skills/114502.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "천퇴성도 장전",
+    name_de: "천퇴성도 장전",  // ★ 독일어
+    name_ko: "천퇴성도 장전",
+    name_en: "천퇴성도 장전",  // ★ 영어
+    image: "Images/Skills/뇌횡/114508.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "폭쇄참",
+    name_de: "폭쇄참 [爆碎斬]",  // ★ 독일어
+    name_ko: "폭쇄참 [爆碎斬]",
+    name_en: "폭쇄참 [爆碎斬]",  // ★ 영어
+    image: "Images/Skills/뇌횡/114505.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "쾌도난마",
+    name_de: "폭쇄참 [爆碎斬]",  // ★ 독일어
+    name_ko: "폭쇄참 [爆碎斬]",
+    name_en: "폭쇄참 [爆碎斬]",  // ★ 영어
+    image: "Images/Skills/뇌횡/114506.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "초절맹호살격난참",
+    name_de: "폭쇄참 [爆碎斬]",  // ★ 독일어
+    name_ko: "폭쇄참 [爆碎斬]",
+    name_en: "폭쇄참 [爆碎斬]",  // ★ 영어
+    image: "Images/Skills/뇌횡/114507.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라1",
+    name_de: "",  // ★ 독일어
+    name_ko: "머리 으깨기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132501.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라2",
+    name_de: "",  // ★ 독일어
+    name_ko: "앗, 조용히 해주세요",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132502.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라3",
+    name_de: "",  // ★ 독일어
+    name_ko: "빠, 빨리 지령을 수행해야만…",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132503.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라4",
+    name_de: "",  // ★ 독일어
+    name_ko: "얌전히 으깨져주세요",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132504.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라5",
+    name_de: "",  // ★ 독일어
+    name_ko: "이 손으로 대신…",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132505.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라6",
+    name_de: "",  // ★ 독일어
+    name_ko: "파헤치고, 파헤치겠어요",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132506.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라7",
+    name_de: "",  // ★ 독일어
+    name_ko: "대행: 새기기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132507.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라8",
+    name_de: "",  // ★ 독일어
+    name_ko: "대행: 말살",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132508.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라9",
+    name_de: "",  // ★ 독일어
+    name_ko: "대행: 말살 - 본망[本望]",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132509.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "소라10",
+    name_de: "",  // ★ 독일어
+    name_ko: "모든 것을 듣고, 모든 것을 바라고, 모든 것을 이 손으로…",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/소라/132509.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔1",
+    name_de: "",  // ★ 독일어
+    name_ko: "무게를 실어 내려쳐, 몸을 무너뜨리고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134701.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔2",
+    name_de: "",  // ★ 독일어
+    name_ko: "끝을 세워, 심지까지 밀어 넣고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134702.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔3",
+    name_de: "",  // ★ 독일어
+    name_ko: "날을 눕혀, 숨결이 갈라지듯 잘라내고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134703.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔4",
+    name_de: "",  // ★ 독일어
+    name_ko: "휘둘러 떨어트려, 땅과 하나로 만들어",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134704.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔5",
+    name_de: "",  // ★ 독일어
+    name_ko: "점 하나를 겨눠, 안쪽에서 울리며",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134705.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔6",
+    name_de: "",  // ★ 독일어
+    name_ko: "결을 낮게 깔아, 남은 것을 벗겨내고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134706.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔7",
+    name_de: "",  // ★ 독일어
+    name_ko: "소리를 부수고, 생각을 납작하게 짓이겨라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134707.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔8",
+    name_de: "",  // ★ 독일어
+    name_ko: "고요의 중심을 찌르고, 기억을 꿰뚫어라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134708.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔9",
+    name_de: "",  // ★ 독일어
+    name_ko: "날카롭게 벼린 비밀로, 형태를 베어내라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134709.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔10",
+    name_de: "Furioso-Replica",  // ★ 독일어
+    name_ko: "Furioso-Replica",
+    name_en: "Furioso-Replica",  // ★ 영어
+    image: "Images/Skills/뤼엔/134711.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔11",
+    name_de: "",  // ★ 독일어
+    name_ko: "무게를 실어 내려쳐, 몸을 무너뜨리고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134801.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔12",
+    name_de: "",  // ★ 독일어
+    name_ko: "끝을 세워, 심지까지 밀어 넣고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134802.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔13",
+    name_de: "",  // ★ 독일어
+    name_ko: "날을 눕혀, 숨결이 갈라지듯 잘라내고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134803.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔14",
+    name_de: "",  // ★ 독일어
+    name_ko: "휘둘러 떨어트려, 땅과 하나로 만들어",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134804.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔15",
+    name_de: "",  // ★ 독일어
+    name_ko: "점 하나를 겨눠, 안쪽에서 울리며",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134805.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔16",
+    name_de: "",  // ★ 독일어
+    name_ko: "결을 낮게 깔아, 남은 것을 벗겨내고",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134806.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔17",
+    name_de: "",  // ★ 독일어
+    name_ko: "소리를 부수고, 생각을 납작하게 짓이겨라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134807.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔18",
+    name_de: "",  // ★ 독일어
+    name_ko: "고요의 중심을 찌르고, 기억을 꿰뚫어라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134808.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔19",
+    name_de: "",  // ★ 독일어
+    name_ko: "날카롭게 벼린 비밀로, 형태를 베어내라",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134809.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔20",
+    name_de: "",  // ★ 독일어
+    name_ko: "딸, 기억해? 이번 건 아마 너만 막아낼 수 있을 거야",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/뤼엔/134810.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔21",
+    name_de: "Furioso [Crescendo]",  // ★ 독일어
+    name_ko: "Furioso [Crescendo]",
+    name_en: "Furioso [Crescendo]",  // ★ 영어
+    image: "Images/Skills/뤼엔/134811.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "뤼엔22",
+    name_de: "Furioso [Lacrimosa-Crescendo]",  // ★ 독일어
+    name_ko: "Furioso [Lacrimosa-Crescendo]",
+    name_en: "Furioso [Lacrimosa-Crescendo]",  // ★ 영어
+    image: "Images/Skills/뤼엔/134811.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라1",
+    name_de: "",  // ★ 독일어
+    name_ko: "몸 좀 풀어볼까?",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132801.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라2",
+    name_de: "",  // ★ 독일어
+    name_ko: "욜라 패기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132802.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라3",
+    name_de: "",  // ★ 독일어
+    name_ko: "가만 안둬",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132806.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라4",
+    name_de: "",  // ★ 독일어
+    name_ko: "해결사 배 가르기!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132803.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라5",
+    name_de: "",  // ★ 독일어
+    name_ko: "십자난무!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132804.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "키라6",
+    name_de: "",  // ★ 독일어
+    name_ko: "바이올렛 브레이크 슬램!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/키라/132805.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스",
+    name_de: "",  // ★ 독일어
+    name_ko: "이름",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  }, 
 ];
 
 var GACHA_DB = [
@@ -809,7 +1289,7 @@ var GACHA_DB = [
     desc_ko: "",
     desc_en: "",          // ★ 영어 번역
     cost: 1750,
-    pool:    ["키라", "마티아스1", "마티아스2", "마티아스3", "마티아스4"],
+    pool:    ["키라1", "키라2", "마티아스1", "마티아스2", "마티아스3", "마티아스4"],
     weights: [70, 22.5, 5, 2, 0.5],
   },
   {
@@ -1163,7 +1643,7 @@ var MUSIC_DB = [
           if (sk) {
             var si = document.createElement('div');
             si.className = 'slot-skill';
-            si.title = sk.name + ': ' + skillBuffText(sk);
+            si.title = (sk['name_'+(typeof currentLang!=='undefined'?currentLang:'ko')] || sk['name_ko'] || sk.name) + ': ' + skillBuffText(sk);
             var skImg = document.createElement('img');
             skImg.src = sk.image; skImg.alt = sk.name;
             skImg.onerror = function() { si.style.display = 'none'; };
@@ -1264,7 +1744,7 @@ var MUSIC_DB = [
             sImg.onerror = function() { sImg.style.display = 'none'; };
             var sText = document.createElement('div');
             sText.className = 'skill-badge-text';
-            sText.textContent = skill.name + ': ' + skillBuffText(skill);
+            sText.textContent = (skill['name_'+(typeof currentLang!=='undefined'?currentLang:'ko')] || skill['name_ko'] || skill.name) + ': ' + skillBuffText(skill);
             badge.appendChild(sImg); badge.appendChild(sText);
             card.appendChild(badge);
           }
