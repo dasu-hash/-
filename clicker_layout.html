@@ -547,8 +547,8 @@ var PET_DB = [
     name_ko: "엄지 아비 - 발렌치나",
     name_en: "The Thumb Nursefather - Valencina",   // ★ 영어 번역
     image: "Images/Sprites/발렌치나.png",
-    rarity: "normal", clickBonus: -1000, critChance: 1, critMult: 0.01,
-    luckyChance: 1, luckyBonus: -750, buyPrice: null,
+    rarity: "normal", clickBonus: -10, critChance: 0, critMult: 0,
+    luckyChance: 0.5, luckyBonus: -10, buyPrice: null,
     skillPool: [
       { id: "",  weight: 0 },
     ],
@@ -618,7 +618,12 @@ var PET_DB = [
     rarity: "normal", clickBonus: 9, critChance: 0, critMult: 0,
     luckyChance: 0.005, luckyBonus: 30, buyPrice: null,
     skillPool: [
-      { id: "",  weight: 0 },
+      { id: "마티아스1",  weight: 30 },
+      { id: "마티아스2",  weight: 23 },
+      { id: "마티아스3",  weight: 18 },
+      { id: "마티아스4",  weight: 13 },
+      { id: "마티아스5",  weight: 9 },
+      { id: "마티아스6",  weight: 7 },
     ],
   },
   {
@@ -630,7 +635,12 @@ var PET_DB = [
     rarity: "normal", clickBonus: 11, critChance: 0.01, critMult: 1.5,
     luckyChance: 0.005, luckyBonus: 45, buyPrice: null,
     skillPool: [
-      { id: "",  weight: 0 },
+      { id: "마티아스7",  weight: 30 },
+      { id: "마티아스8",  weight: 23 },
+      { id: "마티아스9",  weight: 18 },
+      { id: "마티아스10",  weight: 13 },
+      { id: "마티아스11",  weight: 9 },
+      { id: "마티아스12",  weight: 7 },
     ],
   },
   {
@@ -642,7 +652,12 @@ var PET_DB = [
     rarity: "normal", clickBonus: 13, critChance: 0.01, critMult: 1.75,
     luckyChance: 0.005, luckyBonus: 60, buyPrice: null,
     skillPool: [
-      { id: "",  weight: 0 },
+      { id: "마티아스13",  weight: 30 },
+      { id: "마티아스14",  weight: 23 },
+      { id: "마티아스15",  weight: 18 },
+      { id: "마티아스16",  weight: 13 },
+      { id: "마티아스17",  weight: 9 },
+      { id: "마티아스18",  weight: 7 },
     ],
   },
   {
@@ -654,7 +669,10 @@ var PET_DB = [
     rarity: "normal", clickBonus: 17, critChance: 0.01, critMult: 2,
     luckyChance: 0.005, luckyBonus: 120, buyPrice: null,
     skillPool: [
-      { id: "",  weight: 0 },
+      { id: "마티아스19",  weight: 42 },
+      { id: "마티아스20",  weight: 29 },
+      { id: "마티아스21",  weight: 17 },
+      { id: "마티아스22",  weight: 12 }
     ],
   },
   {
@@ -1244,14 +1262,203 @@ var SKILL_DB = [
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
-    id: "마티아스",
+    id: "마티아스1",
     name_de: "",  // ★ 독일어
-    name_ko: "이름",
+    name_ko: "짓밟기",
     name_en: "",  // ★ 영어
-    image: "Images/Skills/마티아스.png",
+    image: "Images/Skills/마티아스/132701.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
-  }, 
+  },
+  {
+    id: "마티아스2",
+    name_de: "",  // ★ 독일어
+    name_ko: "걷어차기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132702.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스3",
+    name_de: "",  // ★ 독일어
+    name_ko: "원한 스탬핑",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132703.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스4",
+    name_de: "",  // ★ 독일어
+    name_ko: "고작 이거에 부서지지 말라고!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132704.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스5",
+    name_de: "",  // ★ 독일어
+    name_ko: "포장 하나 뜯는다!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132706.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스6",
+    name_de: "",  // ★ 독일어
+    name_ko: "규칙 위반",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132705.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스7",
+    name_de: "",  // ★ 독일어
+    name_ko: "짓밟기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132707.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스8",
+    name_de: "",  // ★ 독일어
+    name_ko: "걷어차기",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132708.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스9",
+    name_de: "",  // ★ 독일어
+    name_ko: "원한 스탬핑",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132709.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스10",
+    name_de: "",  // ★ 독일어
+    name_ko: "후끈해지지 않나?!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132710.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스11",
+    name_de: "",  // ★ 독일어
+    name_ko: "두번째 포장지까지 벗기게 되는군.",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132712.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스12",
+    name_de: "",  // ★ 독일어
+    name_ko: "규칙 위반",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/132711.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스13",
+    name_de: "",  // ★ 독일어
+    name_ko: "짓밟기!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134101.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스14",
+    name_de: "",  // ★ 독일어
+    name_ko: "걷어차기!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134102.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스15",
+    name_de: "",  // ★ 독일어
+    name_ko: "즉결 처형 스탬핑!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134103.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스16",
+    name_de: "",  // ★ 독일어
+    name_ko: "슬슬 녹아 죽을 차례다",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134104.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스17",
+    name_de: "",  // ★ 독일어
+    name_ko: "레바테인 - 여기까지 꺼내는 것도 오랜만이군!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134106.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스18",
+    name_de: "",  // ★ 독일어
+    name_ko: "규칙 위반!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134105.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스19",
+    name_de: "",  // ★ 독일어
+    name_ko: "배떼지를 갈라주지",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134107.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스20",
+    name_de: "",  // ★ 독일어
+    name_ko: "칼빵 [레바테인]",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134108.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스21",
+    name_de: "",  // ★ 독일어
+    name_ko: "...즉결처형[레바테인]",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134109.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  },
+  {
+    id: "마티아스22",
+    name_de: "",  // ★ 독일어
+    name_ko: "규칙 위반!!",
+    name_en: "",  // ★ 영어
+    image: "Images/Skills/마티아스/134110.png",
+    critChanceBonus: 0, critMultBonus: 0,
+    luckyChanceBonus: 0,   luckyBonusBonus: 0,
+  }
 ];
 
 var GACHA_DB = [
@@ -1293,28 +1500,16 @@ var GACHA_DB = [
     weights: [40, 30, 22.5, 5, 2, 0.5],
   },
   {
-    id: "약지상자-신체파",
-    name_de: "Der Ring-Körperfraktion",  // ★ 독일어 번역
-    name_ko: "약지-신체파",
-    name_en: "The Ring-Corporist",        // ★ 영어 번역
+    id: "약지상자",
+    name_de: "Der Ring",  // ★ 독일어 번역
+    name_ko: "약지",
+    name_en: "The Ring",        // ★ 영어 번역
     desc_de: "", // ★ 독일어 번역
     desc_ko: "",
     desc_en: "",          // ★ 영어 번역
     cost: 350,
     pool:    ["자동인형_연구원", "자동인형_전투원", "자동인형_침식", "알비나1", "알비나2", "칼리스토" ],
     weights: [40, 25, 20, 10, 4, 1],
-  },
-  {
-    id: "약지상자-야수파",
-    name_de: "Der Ring-Fauvistenfraktion",  // ★ 독일어 번역
-    name_ko: "약지-야수파",
-    name_en: "The Ring-Feral Fauvist",        // ★ 영어 번역
-    desc_de: "", // ★ 독일어 번역
-    desc_ko: "",
-    desc_en: "",          // ★ 영어 번역
-    cost: 200,
-    pool:    [],
-    weights: [],
   },
   {
     id: "소지상자",
