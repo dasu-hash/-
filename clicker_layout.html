@@ -152,7 +152,7 @@
     width: 100%;
   }
   .skill-badge img { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
-  .skill-badge-text { font-size: 9px; color: #c0a8ff; line-height: 1.4; }
+  .skill-badge-text { font-size: 9px; color: #c0a8ff; line-height: 1.5; white-space: normal; word-break: break-word; flex: 1; min-width: 0; }
   .slot-skill {
     position: absolute; top: 4px; left: 4px;
     width: 28px; height: 28px;
@@ -166,20 +166,18 @@
     background: #ffcc00; color: #2a1a00; font-size: 8px;
     padding: 1px 4px; border-radius: 4px; font-weight: 700;
   }
-  .inv-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px; align-items: start;
-  }
+  .inv-grid { display: flex; flex-direction: column; gap: 8px; }
   .inv-card {
     background: #1e1a38; border: 1.5px solid #3a3460; border-radius: 12px;
-    padding: 10px 8px; display: flex; flex-direction: column;
-    align-items: center; gap: 6px; cursor: pointer;
-    transition: border-color .15s, box-shadow .15s; position: relative; width: 100%;
+    padding: 10px 12px; display: flex; flex-direction: row;
+    align-items: flex-start; gap: 12px; cursor: pointer;
+    transition: border-color .15s, box-shadow .15s; position: relative;
+    width: 100%; box-sizing: border-box;
   }
   .inv-card:hover { border-color: #6e5fff; box-shadow: 0 0 0 2px #6e5fff55; }
-  .inv-card img { width: 50px; height: 50px; object-fit: contain; image-rendering: pixelated; }
-  .inv-card .ic-name  { font-size: 11px; color: #e8e0ff; text-align: center; }
-  .inv-card .ic-stats { font-size: 10px; color: #7060b0; text-align: center; }
+  .inv-card img { width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated; flex-shrink: 0; }
+  .inv-card .ic-name { font-size: 12px; color: #e8e0ff; text-align: left; white-space: normal; word-break: break-word; font-weight: 600; }
+  .inv-card .ic-stats { font-size: 10px; color: #7060b0; text-align: left; }
   .inv-empty { color: #5a5090; font-size: 14px; text-align: center; padding: 32px 0; }
   #inv-delete-btn {
     width: 28px; height: 28px; border-radius: 50%;
@@ -211,7 +209,7 @@
   }
   .gacha-info h3 { font-size: 15px; color: #e8e0ff; margin-bottom: 4px; }
   .gacha-info p  { font-size: 12px; color: #7060b0; }
-  .gacha-rates   { font-size: 11px; color: #5a5090; margin-top: 4px; }
+  .gacha-rates   { font-size: 11px; color: #5a5090; margin-top: 4px; line-height: 1.8; }
   .gacha-btn {
     padding: 8px 18px; border-radius: 10px; border: 1.5px solid #6e5fff;
     background: #251e4a; color: #c0b0ff; font-size: 13px; cursor: pointer;
@@ -401,6 +399,7 @@ var LANG_DB = {
     inv_subtitle:      "Klicke ein Haustier zum Anlegen/Ablegen",
     inv_empty:         "Keine Haustiere vorhanden",
     inv_delete_title:  "Löschmodus",
+    slot:               "Slot",
     toast_equip:       "{name} in Slot {n} ausgerüstet",
     toast_unequip:     "{name} abgelegt",
     toast_full:        "Alle Slots belegt. ✕ drücken zum Ablegen.",
@@ -427,6 +426,7 @@ var LANG_DB = {
     inv_subtitle:      "펫을 클릭해 슬롯에 장착/해제합니다",
     inv_empty:         "보유한 펫이 없습니다",
     inv_delete_title:  "삭제 모드",
+    slot:               "슬롯",
     toast_equip:       "{name} 슬롯 {n}에 장착",
     toast_unequip:     "{name} 장착 해제",
     toast_full:        "슬롯이 가득 찼습니다. 슬롯의 ✕ 버튼으로 해제 후 장착하세요.",
@@ -453,6 +453,7 @@ var LANG_DB = {
     inv_subtitle:      "Click a pet to equip/unequip",
     inv_empty:         "No pets owned",
     inv_delete_title:  "Delete Mode",
+    slot:               "Slot",
     toast_equip:       "{name} equipped in slot {n}",
     toast_unequip:     "{name} unequipped",
     toast_full:        "All slots full. Press ✕ to unequip.",
@@ -1648,441 +1649,441 @@ var SKILL_DB = [
   },
   {
     id: "알비나1",
-    name_de: "",  // ★ 독일어
+    name_de: "Schlachten – Rippen",  // ★ 독일어
     name_ko: "도축 - 갈비뼈",
-    name_en: "",  // ★ 영어
+    name_en: "Butcher - Ribs",  // ★ 영어
     image: "Images/Skills/알비나/131901.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나2",
-    name_de: "",  // ★ 독일어
+    name_de: "Rotationsbrecher",  // ★ 독일어
     name_ko: "회전분쇄",
-    name_en: "",  // ★ 영어
+    name_en: "Rotator Crush",  // ★ 영어
     image: "Images/Skills/알비나/131901.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나3",
-    name_de: "",  // ★ 독일어
+    name_de: "Sehnenriss",  // ★ 독일어
     name_ko: "힘줄파열",
-    name_en: "",  // ★ 영어
+    name_en: "Tendon Tear",  // ★ 영어
     image: "Images/Skills/알비나/131901.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나4",
-    name_de: "",  // ★ 독일어
+    name_de: "Faszie hungert",  // ★ 독일어
     name_ko: "파시아가 굶주렸어",
-    name_en: "",  // ★ 영어
+    name_en: "Fascia Hungers",  // ★ 영어
     image: "Images/Skills/알비나/131904.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나5",
-    name_de: "",  // ★ 독일어
+    name_de: "Unterdrücktes Fleisch",  // ★ 독일어
     name_ko: "억압당한 육체",
-    name_en: "",  // ★ 영어
+    name_en: "Repressed Flesh",  // ★ 영어
     image: "Images/Skills/알비나/131905.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나6",
-    name_de: "",  // ★ 독일어
+    name_de: "Ausstellungsvorbereitungen",  // ★ 독일어
     name_ko: "전시회 준비",
-    name_en: "",  // ★ 영어
+    name_en: "Exhibition Arrangements",  // ★ 영어
     image: "Images/Skills/알비나/131906.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나7",
-    name_de: "",  // ★ 독일어
+    name_de: "Eiserner Vorhang",  // ★ 독일어
     name_ko: "철의 장막",
-    name_en: "",  // ★ 영어
+    name_en: "Iron Curtain",  // ★ 영어
     image: "Images/Skills/알비나/131906.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나8",
-    name_de: "",  // ★ 독일어
+    name_de: "Schlachten – Rippen",  // ★ 독일어
     name_ko: "도축 - 갈비뼈",
-    name_en: "",  // ★ 영어
+    name_en: "Butcher - Ribs",  // ★ 영어
     image: "Images/Skills/알비나/133601.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나9",
-    name_de: "",  // ★ 독일어
+    name_de: "Rotationsbrecher",  // ★ 독일어
     name_ko: "회전분쇄",
-    name_en: "",  // ★ 영어
+    name_en: "Rotator Crush",  // ★ 영어
     image: "Images/Skills/알비나/133602.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나10",
-    name_de: "",  // ★ 독일어
+    name_de: "Sehnenriss",  // ★ 독일어
     name_ko: "힘줄파열",
-    name_en: "",  // ★ 영어
+    name_en: "Tendon Tear",  // ★ 영어
     image: "Images/Skills/알비나/133603.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나11",
-    name_de: "",  // ★ 독일어
+    name_de: "Zeit zum Essen, Faszie.",  // ★ 독일어
     name_ko: "파시아 식사 시간이야",
-    name_en: "",  // ★ 영어
+    name_en: "Time to Eat, Fascia",  // ★ 영어
     image: "Images/Skills/알비나/133604.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나12",
-    name_de: "",  // ★ 독일어
+    name_de: "Befreiung des unterdrückten Fleisches",  // ★ 독일어
     name_ko: "억압당한 육체의 해방",
-    name_en: "",  // ★ 영어
+    name_en: "Liberation of the Repressed Flesh",  // ★ 영어
     image: "Images/Skills/알비나/133605.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나13",
-    name_de: "",  // ★ 독일어
+    name_de: "Die Ausstellung beginnt",  // ★ 독일어
     name_ko: "시작된 전시회",
-    name_en: "",  // ★ 영어
+    name_en: "The Exhibition Begins",  // ★ 영어
     image: "Images/Skills/알비나/133606.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "알비나14",
-    name_de: "",  // ★ 독일어
+    name_de: "Sie da. Vandalismus ist untersagt.",  // ★ 독일어
     name_ko: "반달리즘은 사절이야",
-    name_en: "",  // ★ 영어
+    name_en: "You there. Vandalism is Prohibited.",  // ★ 영어
     image: "Images/Skills/알비나/133607.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토1",
-    name_de: "",  // ★ 독일어
+    name_de: "Installationskunst Nr. 3: Improvisierter Brustkorb",  // ★ 독일어
     name_ko: "설치 미술 제 3호 ‘간이늑골’",
-    name_en: "",  // ★ 영어
+    name_en: "Installation Art no. 3: Improvised Ribcage",  // ★ 영어
     image: "Images/Skills/칼리스토/133101.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토2",
-    name_de: "",  // ★ 독일어
+    name_de: "Anatomisieren",  // ★ 독일어
     name_ko: "해체",
-    name_en: "",  // ★ 영어
+    name_en: "Anatomize",  // ★ 영어
     image: "Images/Skills/칼리스토/133102.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토3",
-    name_de: "",  // ★ 독일어
+    name_de: "Materialbeschaffung – blutgetränktes Objet",  // ★ 독일어
     name_ko: "재료획득 - 피로 목욕하는 오브제",
-    name_en: "",  // ★ 영어
+    name_en: "Gather Ingredient - Blood-bathed Objet",  // ★ 영어
     image: "Images/Skills/칼리스토/133103.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토4",
-    name_de: "",  // ★ 독일어
+    name_de: "Melodie der Tibia – Anatomisierung des Unanatomisierten durch das Anatomisierte",  // ★ 독일어
     name_ko: "티비아의 멜로디 - 해체된 것이 해체되지 않은 것을 해체하는 것",
-    name_en: "",  // ★ 영어
+    name_en: "Tibia's Melody - Anatomization of the Unanatomized by the Anatomized",  // ★ 영어
     image: "Images/Skills/칼리스토/133104.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토5",
-    name_de: "",  // ★ 독일어
+    name_de: "Oh, wie sehr wir das Fleisch und das Blut lieben",  // ★ 독일어
     name_ko: "우린 피와 살을 사랑해요",
-    name_en: "",  // ★ 영어
+    name_en: "Oh, How We Love the Flesh and the Blood",  // ★ 영어
     image: "Images/Skills/칼리스토/133105.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토6",
-    name_de: "",  // ★ 독일어
+    name_de: "Die Ausstellung kuratieren",  // ★ 독일어
     name_ko: "전시회 주최",
-    name_en: "",  // ★ 영어
+    name_en: "Curating the Exhibition",  // ★ 영어
     image: "Images/Skills/칼리스토/133106.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토7",
-    name_de: "",  // ★ 독일어
+    name_de: "Bitte. Vandalismus ist untersagt.",  // ★ 독일어
     name_ko: "반달리즘은 사절이랍니다",
-    name_en: "",  // ★ 영어
+    name_en: "Please. Vandalism is Prohibited.",  // ★ 영어
     image: "Images/Skills/칼리스토/133107.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "칼리스토8",
-    name_de: "",  // ★ 독일어
+    name_de: "Schlusszeit – Installationskunst Nr. 1: Euer Fleisch und eure Knochen als Sitzplätze der Galerie",  // ★ 독일어
     name_ko: "폐장 - 설치미술 제 1호 ‘당신들이 흩뿌린 살과 뼈가 객석이 되어’",
-    name_en: "",  // ★ 영어
+    name_en: "Closing Time - Installation Art no. 1: Your Flesh and Bones as the Gallery's Seats",  // ★ 영어
     image: "Images/Skills/칼리스토/133108.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌1",
-    name_de: "",  // ★ 독일어
+    name_de: "Doppelschlag [二擊]",  // ★ 독일어
     name_ko: "이격[二擊]",
-    name_en: "",  // ★ 영어
+    name_en: "Twinstrike [二擊]",  // ★ 영어
     image: "Images/Skills/렌/131809.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌2",
-    name_de: "",  // ★ 독일어
+    name_de: "Dreifachschlag [三擊]",  // ★ 독일어
     name_ko: "삼격[三擊]",
-    name_en: "",  // ★ 영어
+    name_en: "Triplestrike [三擊]",  // ★ 영어
     image: "Images/Skills/렌/131810.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌3",
-    name_de: "",  // ★ 독일어
+    name_de: "Kettenhieb [連鎖斬]",  // ★ 독일어
     name_ko: "연쇄참[連鎖斬]",
-    name_en: "",  // ★ 영어
+    name_en: "Chainslash [連鎖斬]",  // ★ 영어
     image: "Images/Skills/렌/131805.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌4",
-    name_de: "",  // ★ 독일어
+    name_de: "Namenloser Hieb [無名閃]",  // ★ 독일어
     name_ko: "무명섬[無名閃]",
-    name_en: "",  // ★ 영어
+    name_en: "Unnamed Cut [無名閃]",  // ★ 영어
     image: "Images/Skills/렌/131804.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌5",
-    name_de: "",  // ★ 독일어
+    name_de: "Fallsternschlag [落星一殺]",  // ★ 독일어
     name_ko: "낙성일살[落星一殺]",
-    name_en: "",  // ★ 영어
+    name_en: "Fallstar Slayer [落星一殺]",  // ★ 영어
     image: "Images/Skills/렌/131807.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌6",
-    name_de: "",  // ★ 독일어
+    name_de: "Raumspaltender Hieb – Azurhieb [空間斬 - 靑]",  // ★ 독일어
     name_ko: "공간참 - 청[空間斬 - 靑]",
-    name_en: "",  // ★ 영어
+    name_en: "Rend Space - Azureslash [空間斬 - 靑]",  // ★ 영어
     image: "Images/Skills/렌/131807.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌7",
-    name_de: "",  // ★ 독일어
+    name_de: "Ausweichen [回]",  // ★ 독일어
     name_ko: "회[回]",
-    name_en: "",  // ★ 영어
+    name_en: "Swerve [回]",  // ★ 영어
     image: "Images/Skills/렌/131801.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌8",
-    name_de: "",  // ★ 독일어
+    name_de: "Verteidigen [守]",  // ★ 독일어
     name_ko: "수[守]",
-    name_en: "",  // ★ 영어
+    name_en: "Defend [守]",  // ★ 영어
     image: "Images/Skills/렌/131802.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌9",
-    name_de: "",  // ★ 독일어
+    name_de: "Reflektieren [反]",  // ★ 독일어
     name_ko: "반[反]",
-    name_en: "",  // ★ 영어
+    name_en: "Reflect [反]",  // ★ 영어
     image: "Images/Skills/렌/131803.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "렌10",
-    name_de: "",  // ★ 독일어
+    name_de: "Rückzugsstellung [收勢]",  // ★ 독일어
     name_ko: "수세[收勢]",
-    name_en: "",  // ★ 영어
+    name_en: "Retreat Form [收勢]",  // ★ 영어
     image: "Images/Skills/렌/131808.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비1",
-    name_de: "",  // ★ 독일어
+    name_de: "Doppelschnitt [二連]",  // ★ 독일어
     name_ko: "이연[二連]",
-    name_en: "",  // ★ 영어
+    name_en: "Twinslash [二連]",  // ★ 영어
     image: "Images/Skills/소지 아비/132201.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비2",
-    name_de: "",  // ★ 독일어
+    name_de: "Dreifachschnitt [三連]",  // ★ 독일어
     name_ko: "삼연[三連]",
-    name_en: "",  // ★ 영어
+    name_en: "Tripleslash [三連]",  // ★ 영어
     image: "Images/Skills/소지 아비/132202.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비3",
-    name_de: "",  // ★ 독일어
+    name_de: "Schneller Blitzhieb [快閃]",  // ★ 독일어
     name_ko: "쾌섬[快閃]",
-    name_en: "",  // ★ 영어
+    name_en: "Swift Glimmer [快閃]",  // ★ 영어
     image: "Images/Skills/소지 아비/132203.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비4",
-    name_de: "",  // ★ 독일어
+    name_de: "Formloser Hieb [無形斬]",  // ★ 독일어
     name_ko: "무형참[無形斬]",
-    name_en: "",  // ★ 영어
+    name_en: "Formless Cut [無形斬]",  // ★ 영어
     image: "Images/Skills/소지 아비/132204.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비5",
-    name_de: "",  // ★ 독일어
+    name_de: "Raumspaltender Hieb [空間斬]",  // ★ 독일어
     name_ko: "공간참[空間斬]",
-    name_en: "",  // ★ 영어
+    name_en: "Rend Space [空間斬]",  // ★ 영어
     image: "Images/Skills/소지 아비/132205.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비6",
-    name_de: "",  // ★ 독일어
+    name_de: "Nachbildschritt [殘像步]",  // ★ 독일어
     name_ko: "잔상보[殘像步]",
-    name_en: "",  // ★ 영어
+    name_en: "Phantom Step [殘像步]",  // ★ 영어
     image: "Images/Skills/소지 아비/132206.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비7",
-    name_de: "",  // ★ 독일어
+    name_de: "Stilles Beobachten",  // ★ 독일어
     name_ko: "관망",
-    name_en: "",  // ★ 영어
+    name_en: "Silent Regard",  // ★ 영어
     image: "Images/Skills/소지 아비/132207.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비8",
-    name_de: "",  // ★ 독일어
+    name_de: "Todesklinge [絶命]",  // ★ 독일어
     name_ko: "절명[絶命]",
-    name_en: "",  // ★ 영어
+    name_en: "Deathedge [絶命]",  // ★ 영어
     image: "Images/Skills/소지 아비/132208.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비9",
-    name_de: "",  // ★ 독일어
+    name_de: "Raumspaltender Hieb – Verbindungsfaden [空間斬-緣]",  // ★ 독일어
     name_ko: "공간참-연[空間斬-緣]",
-    name_en: "",  // ★ 영어
+    name_en: "Rend Space - String Connection [空間斬-緣]",  // ★ 영어
     image: "Images/Skills/소지 아비/132209.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비10",
-    name_de: "",  // ★ 독일어
+    name_de: "Ultimativer Raumspaltender Hieb – Trennung des Verbindungsfadens [空間斬-絶縁]",  // ★ 독일어
     name_ko: "극 공간참 - 절연[空間斬 - 絶緣]",
-    name_en: "",  // ★ 영어
+    name_en: "Uttermost Rend Space - String Severance [空間斬-絶縁]",  // ★ 영어
     image: "Images/Skills/소지 아비/132205.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비11",
-    name_de: "",  // ★ 독일어
+    name_de: "Bestimmter Gegner",  // ★ 독일어
     name_ko: "확정된 상대",
-    name_en: "",  // ★ 영어
+    name_en: "Destinated Opponent",  // ★ 영어
     image: "Images/Skills/소지 아비/132211.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비12",
-    name_de: "",  // ★ 독일어
+    name_de: "Doppelschnitt – Nachhallschnitt [二連-殘]",  // ★ 독일어
     name_ko: "이연 - 잔[二連 - 殘]",
-    name_en: "",  // ★ 영어
+    name_en: "Twinslash - Echoshear [二連-殘]",  // ★ 영어
     image: "Images/Skills/소지 아비/132202.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비13",
-    name_de: "",  // ★ 독일어
+    name_de: "Unvermeidlicher Todesschlag [必然殺]",  // ★ 독일어
     name_ko: "필연쇄[必然殺]",
-    name_en: "",  // ★ 영어
+    name_en: "Inevitable Termination [必然殺]",  // ★ 영어
     image: "Images/Skills/소지 아비/132208.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비14",
-    name_de: "",  // ★ 독일어
+    name_de: "Groll [怨望]",  // ★ 독일어
     name_ko: "원망[怨望]",
-    name_en: "",  // ★ 영어
+    name_en: "Resentment [怒望]",  // ★ 영어
     image: "Images/Skills/소지 아비/132201.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비15",
-    name_de: "",  // ★ 독일어
+    name_de: "Aussichtslosigkeit [非望]",  // ★ 독일어
     name_ko: "비망[非望]",
-    name_en: "",  // ★ 영어
+    name_en: "Futility [非望]",  // ★ 영어
     image: "Images/Skills/소지 아비/132202.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비16",
-    name_de: "",  // ★ 독일어
+    name_de: "Bestürzung [落望]",  // ★ 독일어
     name_ko: "낙망[落望]",
-    name_en: "",  // ★ 영어
+    name_en: "Dismay [落望]",  // ★ 영어
     image: "Images/Skills/소지 아비/132207.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
   },
   {
     id: "소지 아비17",
-    name_de: "",  // ★ 독일어
+    name_de: "Ich hege großen Groll gegen dich. Aber...",  // ★ 독일어
     name_ko: "당신이 원망스러워, 하지만...",
-    name_en: "",  // ★ 영어
+    name_en: "I resent you so. But...",  // ★ 영어
     image: "Images/Skills/소지 아비/132207.png",
     critChanceBonus: 0, critMultBonus: 0,
     luckyChanceBonus: 0,   luckyBonusBonus: 0,
@@ -2154,6 +2155,10 @@ var GACHA_DB = [
 ];
 
 var MUSIC_DB = [
+  // ★ bg      : 단일 배경 이미지
+  // ★ bgs     : 슬라이드쇼. 두 가지 방식:
+  //   방식 1 (쿨타임 동일): bgs: ["bg1.png", "bg2.png"], interval: 5000
+  //   방식 2 (쿨타임 다르게): bgs: [{ file: "bg1.png", duration: 10000 }, { file: "bg2.png", duration: 15000 }]
   { title_de: "Daumen",  // ★ 독일어
     title_ko: "엄지",
     title_en: "Thumb",  // ★ 영어
@@ -2173,7 +2178,31 @@ var MUSIC_DB = [
   { title_de: "Kleine",  // ★ 독일어
     title_ko: "소지",
     title_en: "Pinky",  // ★ 영어
-    file: "Music/소지.wav", bg: "Images/Backgrounds/소지.png" }
+    file: "Music/소지.wav", bg: "Images/Backgrounds/소지.png" },
+  { title_de: "Ryōshū",  // ★ 독일어
+    title_ko: "료슈",
+    title_en: "Ryōshū",  // ★ 영어
+    file: "Music/료슈.wav",
+    bgs: [
+      { file: "Images/Backgrounds/료슈방2.png", duration: 3000 },
+      { file: "Images/Backgrounds/엄지2.png", duration: 400 },
+      { file: "Images/Backgrounds/엄지3.png", duration: 400 },
+      { file: "Images/Backgrounds/검지.png", duration: 400 },
+      { file: "Images/Backgrounds/뤼엔.png", duration: 400 },
+      { file: "Images/Backgrounds/중지.png", duration: 400 },
+      { file: "Images/Backgrounds/중지2.png", duration: 400 },
+      { file: "Images/Backgrounds/약지.png", duration: 400 },
+      { file: "Images/Backgrounds/약지2.png", duration: 400 },
+      { file: "Images/Backgrounds/옥상1.png", duration: 400 },
+      { file: "Images/Backgrounds/옥상2.png", duration: 400 },
+      { file: "Images/Backgrounds/료슈방.png", duration: 600 },
+      { file: "Images/Backgrounds/료슈방2.png", duration: 1000000 },
+    ] 
+  },
+  { title_de: "Rufo",  // ★ 독일어
+    title_ko: "루포",
+    title_en: "Rufo",  // ★ 영어
+    file: "Music/루포.wav", bg: "Images/Backgrounds/료슈방3.png" }
 ];
 </script>
 
@@ -2509,8 +2538,8 @@ var MUSIC_DB = [
         if (idx !== -1) {
           const badge = document.createElement('div');
           badge.className = 'equipped-badge';
-          badge.textContent = '슬롯' + (idx + 1);
-          card.appendChild(badge);
+          badge.textContent = (typeof t === 'function' ? t('slot') : '슬롯') + (idx + 1);
+          // badge는 info 생성 후 추가
         }
         const img = document.createElement('img');
         img.src = pet.image; img.alt = pet.name;
@@ -2527,7 +2556,16 @@ var MUSIC_DB = [
         if (pet.critChance > 0) lines.push('크리 ' + Math.round(pet.critChance*100) + '%×' + pet.critMult);
         if (pet.luckyChance > 0) lines.push('럭키 ' + Math.round(pet.luckyChance*100) + '%');
         st.textContent = lines.join(' / ');
-        card.appendChild(img); card.appendChild(nm); card.appendChild(rr); card.appendChild(st);
+        var info = document.createElement('div');
+        info.style.cssText = 'display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;';
+        if (idx !== -1) {
+          const eb = document.createElement('div');
+          eb.className = 'equipped-badge';
+          eb.textContent = (typeof t === 'function' ? t('slot') : '슬롯') + (idx + 1);
+          info.appendChild(eb);
+        }
+        info.appendChild(nm); info.appendChild(rr); info.appendChild(st);
+        card.appendChild(img); card.appendChild(info);
         if (deleteMode) card.classList.add('delete-mode');
 
         card.onclick = () => {
@@ -2569,7 +2607,7 @@ var MUSIC_DB = [
             sText.className = 'skill-badge-text';
             sText.textContent = (skill['name_'+(typeof currentLang!=='undefined'?currentLang:'ko')] || skill['name_ko'] || skill.name) + ': ' + skillBuffText(skill);
             badge.appendChild(sImg); badge.appendChild(sText);
-            card.appendChild(badge);
+            info.appendChild(badge);
           }
         }
 
@@ -2600,7 +2638,7 @@ var MUSIC_DB = [
       const rateStr = g.pool.map((id, i) => {
         const pet = getPet(id);
         return (pet ? petName(pet) : id) + ' ' + Math.round(g.weights[i] / totalW * 100) + '%';
-      }).join(' · ');
+      }).join('<br>');
       const card = document.createElement('div');
       card.className = 'gacha-card';
       card.innerHTML = `
@@ -2732,9 +2770,35 @@ var MUSIC_DB = [
     document.getElementById('music-title').textContent = trackTitle(track);
     if (musicPlaying) audio.load();
   }
+  var slideshowTimer = null;
+  var slideshowIdx = 0;
+
   function applyTrackBg() {
+    if (slideshowTimer) { clearTimeout(slideshowTimer); slideshowTimer = null; }
+    slideshowIdx = 0;
     const track = MUSIC_DB[musicIdx];
-    setBg(track.bg || BG.default);
+    const bgs = track.bgs;
+
+    if (bgs && bgs.length > 0) {
+      function getBgFile(e) { return typeof e === 'string' ? e : e.file; }
+      function getBgDuration(e) { return (typeof e === 'object' && e.duration) ? e.duration : (track.interval || 5000); }
+
+      setBg(getBgFile(bgs[0]));
+
+      function scheduleNext() {
+        if (!musicPlaying) return;
+        slideshowTimer = setTimeout(function() {
+          if (!musicPlaying) return;
+          slideshowIdx = (slideshowIdx + 1) % bgs.length;
+          setBg(getBgFile(bgs[slideshowIdx]));
+          scheduleNext();
+        }, getBgDuration(bgs[slideshowIdx]));
+      }
+
+      if (bgs.length > 1) scheduleNext();
+    } else {
+      setBg(track.bg || BG.default);
+    }
   }
   function setVolume(val) {
     audio.volume = val / 100;
@@ -2745,7 +2809,8 @@ var MUSIC_DB = [
       audio.pause(); musicPlaying = false;
       document.getElementById('music-toggle').textContent = '▶';
       document.getElementById('music-player').classList.add('paused');
-      setBg(BG.default); // 일시정지 시 기본 배경
+      if (typeof slideshowTimer !== 'undefined' && slideshowTimer) { clearTimeout(slideshowTimer); slideshowTimer = null; }
+      setBg(BG.default);
     } else {
       if (!audio.src || audio.src === window.location.href) loadTrack(musicIdx);
       audio.play().then(() => {
