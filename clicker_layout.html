@@ -400,6 +400,14 @@ var LANG_DB = {
     inv_empty:         "Keine Haustiere vorhanden",
     inv_delete_title:  "Löschmodus",
     slot:               "Slot",
+    stat_click:         "Click",
+    stat_crit:          "Crit.",
+    stat_lucky:         "Lucky",
+    stat_mult:          "x",
+    stat_click:         "Klick",
+    stat_crit:          "Krit.",
+    stat_lucky:         "Glück",
+    stat_mult:          "x",
     toast_equip:       "{name} in Slot {n} ausgerüstet",
     toast_unequip:     "{name} abgelegt",
     toast_full:        "Alle Slots belegt. ✕ drücken zum Ablegen.",
@@ -427,6 +435,10 @@ var LANG_DB = {
     inv_empty:         "보유한 펫이 없습니다",
     inv_delete_title:  "삭제 모드",
     slot:               "슬롯",
+    stat_click:         "클릭",
+    stat_crit:          "크리",
+    stat_lucky:         "럭키",
+    stat_mult:          "배",
     toast_equip:       "{name} 슬롯 {n}에 장착",
     toast_unequip:     "{name} 장착 해제",
     toast_full:        "슬롯이 가득 찼습니다. 슬롯의 ✕ 버튼으로 해제 후 장착하세요.",
@@ -473,6 +485,7 @@ var RARITY_DB = [
   { id: "rare",      label_de: "Selten",     label_ko: "희귀", label_en: "Rare",      borderColor: "#3a6fbf", glowColor: null,        textColor: "#5b9cf0" },
   { id: "legendary", label_de: "Legendär",   label_ko: "전설", label_en: "Legendary", borderColor: "#b8860b", glowColor: "#b8860b55", textColor: "#f0b030" },
   { id: "mythic",    label_de: "Mythisch",   label_ko: "신화", label_en: "Mythic",    borderColor: "#9b30ff", glowColor: "#9b30ff66", textColor: "#cc88ff" },
+  { id: "secret",    label_de: "Geheim",     label_ko: "시크릿", label_en: "Secret",  borderColor: "#000000", glowColor: "#00000066", textColor: "#ffffff" },
 ];
 
 var PET_DB = [
@@ -519,7 +532,7 @@ var PET_DB = [
     name_ko: "약지 신체파 자동 인형 - 분홍욕망 침식",
     name_en: "The Ring Corporist Automanikin - Roseate Desire Corrosion",   // ★ 영어 번역
     image: "Images/Sprites/자동 인형 침식.png",
-    rarity: "normal", clickBonus: 2, critChance: 0.05, critMult: 1.4,
+    rarity: "rare", clickBonus: 2, critChance: 0.05, critMult: 1.4,
     luckyChance: 0, luckyBonus: 0, buyPrice: 100,
     skillPool: [
     ],
@@ -530,7 +543,7 @@ var PET_DB = [
     name_ko: "동부 엄지 카포IIII - 뇌횡",
     name_en: "The Thumb East Capo IIII - Lei Heng",   // ★ 영어 번역
     image: "Images/Sprites/뇌횡.png",
-    rarity: "normal", clickBonus: 5, critChance: 0.09, critMult: 2.75,
+    rarity: "legendary", clickBonus: 5, critChance: 0.09, critMult: 2.75,
     luckyChance: 0.04, luckyBonus: 45, buyPrice: null,
     skillPool: [
       { id: "이연참1",  weight: 27 },
@@ -549,7 +562,7 @@ var PET_DB = [
     name_ko: "엄지 아비 - 발렌치나",
     name_en: "The Thumb Nursefather - Valencina",   // ★ 영어 번역
     image: "Images/Sprites/발렌치나.png",
-    rarity: "normal", clickBonus: -10, critChance: 0, critMult: 0,
+    rarity: "legendary", clickBonus: -10, critChance: 0, critMult: 0,
     luckyChance: 0.5, luckyBonus: -10, buyPrice: null,
     skillPool: [
       { id: "",  weight: 0 },
@@ -561,7 +574,7 @@ var PET_DB = [
     name_ko: "엄지 아비 - 발렌치나 (예지안)",
     name_en: "The Thumb Nursefather - Valencina (Eye of Precognition)",   // ★ 영어 번역
     image: "Images/Sprites/발렌치나.png",
-    rarity: "normal", clickBonus: 4, critChance: 0.04, critMult: 3.75,
+    rarity: "mythic", clickBonus: 4, critChance: 0.04, critMult: 3.75,
     luckyChance: 0.0008, luckyBonus: 1000, buyPrice: null,
     skillPool: [
       { id: "발렌치나1",  weight: 25 },
@@ -580,7 +593,7 @@ var PET_DB = [
     name_ko: "검지 아비 - 뤼엔 (가면)",
     name_en: "The Index Nursefather - Rien (Mask)",   // ★ 영어 번역
     image: "Images/Sprites/뤼엔1.png",
-    rarity: "normal", clickBonus: -3, critChance: 0.22, critMult: 6,
+    rarity: "mythic", clickBonus: -3, critChance: 0.22, critMult: 6,
     luckyChance: 0.12, luckyBonus: 120, buyPrice: null,
     skillPool: [
       { id: "뤼엔1",  weight: 22 },
@@ -601,7 +614,7 @@ var PET_DB = [
     name_ko: "검지 아비 - 뤼엔",
     name_en: "The Index Nursefather - Rien",   // ★ 영어 번역
     image: "Images/Sprites/뤼엔2.png",
-    rarity: "normal", clickBonus: -4, critChance: 0.25, critMult: 8,
+    rarity: "secret", clickBonus: -4, critChance: 0.25, critMult: 8,
     luckyChance: 0.15, luckyBonus: 220, buyPrice: null,
     skillPool: [
       { id: "뤼엔11",  weight: 21.5 },
@@ -624,7 +637,7 @@ var PET_DB = [
     name_ko: "중지 아비 - 마티아스 (봉인된 검)",
     name_en: "The Middle Nursefather - Matthias (Sealed Sword)",   // ★ 영어 번역
     image: "Images/Sprites/마티아스1.png",
-    rarity: "normal", clickBonus: 9, critChance: 0, critMult: 0,
+    rarity: "rare", clickBonus: 9, critChance: 0, critMult: 0,
     luckyChance: 0.005, luckyBonus: 30, buyPrice: null,
     skillPool: [
       { id: "마티아스1",  weight: 30 },
@@ -641,7 +654,7 @@ var PET_DB = [
     name_ko: "중지 아비 - 마티아스 (1단계 봉인 해제)",
     name_en: "The Middle Nursefather - Matthias (First Seal Removed)",   // ★ 영어 번역
     image: "Images/Sprites/마티아스2.png",
-    rarity: "normal", clickBonus: 11, critChance: 0.01, critMult: 1.5,
+    rarity: "legendary", clickBonus: 11, critChance: 0.01, critMult: 1.5,
     luckyChance: 0.005, luckyBonus: 45, buyPrice: null,
     skillPool: [
       { id: "마티아스7",  weight: 30 },
@@ -658,7 +671,7 @@ var PET_DB = [
     name_ko: "중지 아비 - 마티아스 (2단계 봉인 해제)",
     name_en: "The Middle Nursefather - Matthias (Second Seal Removed)",   // ★ 영어 번역
     image: "Images/Sprites/마티아스3.png",
-    rarity: "normal", clickBonus: 13, critChance: 0.01, critMult: 1.75,
+    rarity: "mythic", clickBonus: 13, critChance: 0.01, critMult: 1.75,
     luckyChance: 0.005, luckyBonus: 60, buyPrice: null,
     skillPool: [
       { id: "마티아스13",  weight: 30 },
@@ -675,7 +688,7 @@ var PET_DB = [
     name_ko: "중지 아비 - 마티아스 (레바테인)",
     name_en: "The Middle Nursefather - Matthias (Lævateinn)",   // ★ 영어 번역
     image: "Images/Sprites/마티아스4.png",
-    rarity: "normal", clickBonus: 17, critChance: 0.01, critMult: 2,
+    rarity: "secret", clickBonus: 17, critChance: 0.01, critMult: 2,
     luckyChance: 0.005, luckyBonus: 120, buyPrice: null,
     skillPool: [
       { id: "마티아스19",  weight: 42 },
@@ -690,7 +703,7 @@ var PET_DB = [
     name_ko: "약지 아비 - 칼리스토",
     name_en: "The Ring Nursefather - Callisto",   // ★ 영어 번역
     image: "Images/Sprites/칼리스토.png",
-    rarity: "normal", clickBonus: 10, critChance: 0.03, critMult: 1.8,
+    rarity: "mythic", clickBonus: 10, critChance: 0.03, critMult: 1.8,
     luckyChance: 0.005, luckyBonus: 25, buyPrice: null,
     skillPool: [
       { id: "칼리스토1",  weight: 12 },
@@ -709,7 +722,7 @@ var PET_DB = [
     name_ko: "소지 아비 - 시오미 요루",
     name_en: "The Pinky Nursefather - Shiomi Yoru",   // ★ 영어 번역
     image: "Images/Sprites/지혜성.png",
-    rarity: "normal", clickBonus: 3, critChance: 0.1, critMult: 6.5,
+    rarity: "mythic", clickBonus: 3, critChance: 0.1, critMult: 6.5,
     luckyChance: 0.0075, luckyBonus: 120, buyPrice: null,
     skillPool: [
       { id: "소지 아비1",  weight: 23 },
@@ -729,7 +742,7 @@ var PET_DB = [
     name_ko: "소지 아비 - ???",
     name_en: "The Pinky Nursefather - ???",   // ★ 영어 번역
     image: "Images/Sprites/아라야.png",
-    rarity: "normal", clickBonus: 1, critChance: 0.04, critMult: 9,
+    rarity: "legendary", clickBonus: 1, critChance: 0.04, critMult: 9,
     luckyChance: 0.001, luckyBonus: 400, buyPrice: null,
     skillPool: [
       { id: "소지 아비1",  weight: 17 },
@@ -754,7 +767,7 @@ var PET_DB = [
     name_ko: "엄지 제자 - 루치오",
     name_en: "The Thumb Apprentice - Lucio",   // ★ 영어 번역
     image: "Images/Sprites/루치오.png",
-    rarity: "normal", clickBonus: 5, critChance: 0.05, critMult: 1.8,
+    rarity: "rare", clickBonus: 5, critChance: 0.05, critMult: 1.8,
     luckyChance: 0.0075, luckyBonus: 35, buyPrice: null,
     skillPool: [
       { id: "루치오1",  weight: 35 },
@@ -770,7 +783,7 @@ var PET_DB = [
     name_ko: "검지 제자 - 소라",
     name_en: "The Index Apprentice - Sora",   // ★ 영어 번역
     image: "Images/Sprites/소라1.png",
-    rarity: "normal", clickBonus: -1, critChance: 0, critMult: 0,
+    rarity: "rare", clickBonus: -1, critChance: 0, critMult: 0,
     luckyChance: 0.08, luckyBonus: 18, buyPrice: null,
     skillPool: [
       { id: "소라1",  weight: 40 },
@@ -785,7 +798,7 @@ var PET_DB = [
     name_ko: "검지 제자 - 소라 (E.G.O.)",
     name_en: "The Index Apprentice - Sora (E.G.O.)",   // ★ 영어 번역
     image: "Images/Sprites/소라2.png",
-    rarity: "normal", clickBonus: -2, critChance: 0, critMult: 0,
+    rarity: "legendary", clickBonus: -2, critChance: 0, critMult: 0,
     luckyChance: 0.1, luckyBonus: 45, buyPrice: null,
     skillPool: [
       { id: "소라5",  weight: 28 },
@@ -802,7 +815,7 @@ var PET_DB = [
     name_ko: "중지 제자 - 키라",
     name_en: "The Middle Apprentice - Kira",   // ★ 영어 번역
     image: "Images/Sprites/키라1.png",
-    rarity: "normal", clickBonus: 7, critChance: 0, critMult: 0,
+    rarity: "rare", clickBonus: 7, critChance: 0, critMult: 0,
     luckyChance: 0.005, luckyBonus: 20, buyPrice: null,
     skillPool: [
       { id: "키라1",  weight: 30 },
@@ -815,11 +828,11 @@ var PET_DB = [
   },
   {
     id: "키라2",
-    name_de: "Der Mitte Lehrling - Kira",   // ★ 독일어 번역
-    name_ko: "중지 제자 - 키라",
-    name_en: "The Middle Apprentice - Kira",   // ★ 영어 번역
+    name_de: "Der Mitte Lehrling - Kira (Thermoklingen)",   // ★ 독일어 번역
+    name_ko: "중지 제자 - 키라 (열선)",
+    name_en: "The Middle Apprentice - Kira (Thermal Blades)",   // ★ 영어 번역
     image: "Images/Sprites/키라2.png",
-    rarity: "normal", clickBonus: 8, critChance: 0, critMult: 0,
+    rarity: "rare", clickBonus: 8, critChance: 0, critMult: 0,
     luckyChance: 0.01, luckyBonus: 25, buyPrice: null,
     skillPool: [
       { id: "키라1",  weight: 30 },
@@ -836,7 +849,7 @@ var PET_DB = [
     name_ko: "약지 제자 - 알비나 (갑옷)",
     name_en: "The Ring Apprentice - Albina (Armor)",   // ★ 영어 번역
     image: "Images/Sprites/알비나1.png",
-    rarity: "normal", clickBonus: 3, critChance: 0.03, critMult: 1.5,
+    rarity: "legendary", clickBonus: 3, critChance: 0.03, critMult: 1.5,
     luckyChance: 0.01, luckyBonus: 12, buyPrice: null,
     skillPool: [
       { id: "알비나1",  weight: 27 },
@@ -854,7 +867,7 @@ var PET_DB = [
     name_ko: "약지 제자 - 알비나",
     name_en: "The Ring Apprentice - Albina",   // ★ 영어 번역
     image: "Images/Sprites/알비나2.png",
-    rarity: "normal", clickBonus: 4, critChance: 0.04, critMult: 1.65,
+    rarity: "legendary", clickBonus: 4, critChance: 0.04, critMult: 1.65,
     luckyChance: 0.01, luckyBonus: 18, buyPrice: null,
     skillPool: [
       { id: "알비나8",  weight: 27 },
@@ -872,7 +885,7 @@ var PET_DB = [
     name_ko: "소지 제자 - 렌",
     name_en: "The Pinky Apprentice - Ren",   // ★ 영어 번역
     image: "Images/Sprites/렌.png",
-    rarity: "normal", clickBonus: 2, critChance: 0.08, critMult: 3,
+    rarity: "rare", clickBonus: 2, critChance: 0.08, critMult: 3,
     luckyChance: 0.005, luckyBonus: 20, buyPrice: null,
     skillPool: [
       { id: "렌1",  weight: 10 },
@@ -2552,9 +2565,9 @@ var MUSIC_DB = [
         rr.textContent = rd ? rarityLabel(rd) : pet.rarity;
         const st = document.createElement('div');
         st.className = 'ic-stats';
-        const lines = ['클릭 +' + pet.clickBonus];
-        if (pet.critChance > 0) lines.push('크리 ' + Math.round(pet.critChance*100) + '%×' + pet.critMult);
-        if (pet.luckyChance > 0) lines.push('럭키 ' + Math.round(pet.luckyChance*100) + '%');
+        const lines = [(typeof t==='function'?t('stat_click'):'클릭') + ' +' + pet.clickBonus];
+        if (pet.critChance > 0) lines.push((typeof t==='function'?t('stat_crit'):'크리') + ' ' + Math.round(pet.critChance*100) + '%×' + pet.critMult);
+        if (pet.luckyChance > 0) lines.push((typeof t==='function'?t('stat_lucky'):'럭키') + ' ' + Math.round(pet.luckyChance*100) + '%');
         st.textContent = lines.join(' / ');
         var info = document.createElement('div');
         info.style.cssText = 'display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;';
@@ -2699,9 +2712,9 @@ var MUSIC_DB = [
     const rEl = document.getElementById('gr-rarity');
     rEl.textContent = rd ? rarityLabel(rd) : pet.rarity;
     rEl.style.color = rd ? rd.textColor : '#e8e0ff';
-    const lines = ['클릭 +' + pet.clickBonus];
-    if (pet.critChance > 0) lines.push('크리티컬 ' + Math.round(pet.critChance*100) + '% × ' + pet.critMult + '배');
-    if (pet.luckyChance > 0) lines.push('럭키 ' + Math.round(pet.luckyChance*100) + '% → +' + pet.luckyBonus + 'P');
+    const lines = [(typeof t==='function'?t('stat_click'):'클릭') + ' +' + pet.clickBonus];
+    if (pet.critChance > 0) lines.push((typeof t==='function'?t('stat_crit'):'크리') + ' ' + Math.round(pet.critChance*100) + '% × ' + pet.critMult + (typeof t==='function'?t('stat_mult'):'배'));
+    if (pet.luckyChance > 0) lines.push((typeof t==='function'?t('stat_lucky'):'럭키') + ' ' + Math.round(pet.luckyChance*100) + '% → +' + pet.luckyBonus + 'P');
     document.getElementById('gr-stats').innerHTML = lines.join('<br>');
     closeModal('shop-modal');
     document.getElementById('gacha-result').classList.add('open');
